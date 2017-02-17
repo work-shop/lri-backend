@@ -1,0 +1,59 @@
+$base-color: #464646;
+$highlight-color: #6D6D6D;
+$notification-color: #F1F1F1;
+$action-color: #DFDFDF;
+$button-color: #21759B;
+
+$icon-color: #999;
+$notification-color: #d64e07;
+
+$menu-background: #DFDFDF;
+$menu-text: #21759B;
+
+$menu-current-text: #fff;
+
+$menu-submenu-background-alt: #DFDFDF;
+$menu-submenu-text: #21759B;
+$menu-submenu-current-text: #000;
+
+$menu-highlight-text: #fff;
+$menu-highlight-icon: #ccc;
+$menu-highlight-background: #888;
+
+$menu-bubble-text: #fff;
+$menu-bubble-current-text: #000;
+$menu-avatar-frame: #aaa;
+$menu-submenu-background: #fff;
+
+$menu-collapse-text: #777;
+$menu-collapse-focus-icon: #555;
+
+@import "../_admin_colors.scss";
+
+/* temporary fix for admin-bar hover color */
+#wpadminbar .ab-top-menu > li:hover > .ab-item,
+#wpadminbar .ab-top-menu > li.hover > .ab-item,
+#wpadminbar > #wp-toolbar > #wp-admin-bar-root-default li:hover span.ab-label,
+#wpadminbar > #wp-toolbar > #wp-admin-bar-top-secondary li.hover span.ab-label,
+#wpadminbar .ab-top-menu > li > .ab-item:focus,
+#wpadminbar.nojq .quicklinks .ab-top-menu > li > .ab-item:focus,
+#wpadminbar-nojs .ab-top-menu > li.menupop:hover > .ab-item,
+#wpadminbar .ab-top-menu > li.menupop.hover > .ab-item {
+	color: #000;
+}
+#wpadminbar #wp-admin-bar-user-info .display-name {
+	color: $menu-collapse-text;
+}
+
+#wpadminbar {
+	color: #CCC;
+	background: #464646;
+}
+
+#wpadminbar .ab-item,
+#wpadminbar a.ab-item,
+#wpadminbar > #wp-toolbar span.ab-label,
+#wpadminbar > #wp-toolbar span.noticon {
+	color: #CCC;
+}
+
