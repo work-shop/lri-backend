@@ -14,7 +14,7 @@ class WS_Init_Actions extends WS_Action_Set {
 				'after_theme_setup'		=> array( 'remove_post_formats', 11, 0 ),
 				'login_head'			=> 'login_css',
 				'admin_head'			=> 'admin_css',
-				'admin_menu'			=> 'all_settings_link',
+				'admin_menu'			=> 'all_settings_link'
 				));
 	}
 
@@ -181,6 +181,14 @@ class WS_Init_Actions extends WS_Action_Set {
 		}
 
 
+		$theme_dir = get_template_directory_uri();
+
+  		//Ocean
+		wp_admin_css_color( 'ocean', __( 'blowcean' ),
+			$theme_dir . '/admin-colors/ocean/colors.min.css',
+			array( '#aa9d88', '#9ebaa0', '#738e96', '#f2fcff' )
+		);		
+
 	}
 
 	/* CUSTOM MENU LINK FOR ALL SETTINGS - WILL ONLY APPEAR FOR ADMIN */
@@ -191,6 +199,9 @@ class WS_Init_Actions extends WS_Action_Set {
 	/** ADMIN DASHBOARD ASSETS */
 	public function login_css() { wp_enqueue_style( 'login_css', get_template_directory_uri() . '/assets/css/login.css' ); }
 	public function admin_css() { wp_enqueue_style( 'admin_css', get_template_directory_uri() . '/assets/css/admin.css' ); }
+
+
+
 
 }
 
