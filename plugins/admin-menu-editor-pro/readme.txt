@@ -3,8 +3,8 @@ Contributors: whiteshadow
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=A6P9S6CE3SRSW
 Tags: admin, dashboard, menu, security, wpmu
 Requires at least: 4.1
-Tested up to: 4.6.1
-Stable tag: 2.4.2
+Tested up to: 4.7.1
+Stable tag: 2.4.3
 
 Lets you directly edit the WordPress admin menu. You can re-order, hide or rename existing menus, add custom menus and more.
 
@@ -83,6 +83,10 @@ Here are some usage tips and other things that can be good to know when using th
 == Changelog ==
 
 [Get the latest version here.](http://adminmenueditor.com/updates/)
+
+= 2.4.3 =
+* Added a workaround for WooCommerce 2.6.8 to display the number of new orders in the "Orders" menu title.
+* Tested with WP 4.7 and 4.8-alpha.
 
 = 2.4.2 (2016-10-21) =
 ##### Added

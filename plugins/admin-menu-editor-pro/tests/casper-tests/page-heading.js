@@ -14,7 +14,7 @@ casper.then(function() {
 	ameTest.loadDefaultMenu();
 
 	//Try it with one of the default submenus that has an "Add New" button.
-	ameTest.selectItemByTitle('Posts', 'All Posts', true);
+	ameTest.selectItemByTitle('Plugins', 'Installed Plugins', true);
 	casper.click('.ws_item.ws_active .ws_toggle_advanced_fields');
 	ameTest.setItemFields({
 		'page_heading': 'My Custom Heading'
@@ -33,11 +33,11 @@ casper.then(function() {
 //Wait for the "settings saved" message.
 casper.waitForSelector('#message.updated');
 
-casper.thenOpen(ameTestConfig.adminUrl + '/edit.php', function() {
+casper.thenOpen(ameTestConfig.adminUrl + '/plugins.php', function() {
 	casper.test.assertSelectorHasText(
 		'.wrap > h1:first-child', //In WP 4.2 and below it was H2. WP 4.3 changed it to H1.
 		'My Custom Heading',
-		'The "Posts" heading was changed to "My Custom Heading"'
+		'The "Plugins" heading was changed to "My Custom Heading"'
 	);
 	casper.test.assertExists(
 		'.wrap > h1 .page-title-action', //In WP 4.2 and below the button class was add-new-h2.

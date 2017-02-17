@@ -1,7 +1,7 @@
 <div class="wpallimport-collapsed closed pmai_options">
 	<div class="wpallimport-content-section">
 		<div class="wpallimport-collapsed-header">
-			<h3><?php _e('Advanced Custom Fields Add-On','pmxi_plugin');?></h3>	
+			<h3><?php _e('Advanced Custom Fields Add-On','wp_all_import_acf_add_on');?></h3>
 		</div>
 		<div class="wpallimport-collapsed-content" style="padding: 0;">
 			<div class="wpallimport-collapsed-content-inner">
@@ -51,16 +51,19 @@
 
 								?>
 								<p>
-									<strong><?php _e("Please choose your Field Groups.","pmxi_plugin");?></strong>
+									<strong><?php _e("Please choose your Field Groups.",'wp_all_import_acf_add_on');?></strong>
 								</p>								
 								<ul>
 									<?php 
-									foreach ($acfs as $key => $acfObj) {										
+									foreach ($acfs as $key => $acfObj) {
+										$is_show_acf_group = apply_filters('wp_all_import_acf_is_show_group', true, $acfObj);
 										?>
 										<li>
-											<input type="hidden" name="acf[<?php echo $acfObj['ID'];?>]" value="0"/>							
+											<input type="hidden" name="acf[<?php echo $acfObj['ID'];?>]" value="<?php echo $is_show_acf_group ? '0' : '1'?>"/>
+											<?php if ($is_show_acf_group): ?>
 											<input id="acf_<?php echo $post_type . '_' . $acfObj['ID'];?>" type="checkbox" name="acf[<?php echo $acfObj['ID'];?>]" <?php if ( ! empty($post['acf'][$acfObj['ID']]) ): ?>checked="checked"<?php endif; ?> value="1" rel="<?php echo $acfObj['ID'];?>" class="pmai_acf_group"/>
 											<label for="acf_<?php echo $post_type . '_' . $acfObj['ID']; ?>"><?php echo $acfObj['title']; ?></label>
+											<?php endif; ?>
 										</li>
 										<?php
 									}
@@ -75,7 +78,7 @@
 							}
 							else{
 								?>
-								<p><strong><?php _e("Please create Field Groups.","pmxi_plugin");?></strong></p>				
+								<p><strong><?php _e("Please create Field Groups.",'wp_all_import_acf_add_on');?></strong></p>
 								<?php	
 							}			
 							?>					

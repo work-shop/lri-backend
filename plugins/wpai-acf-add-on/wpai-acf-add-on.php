@@ -3,7 +3,7 @@
 Plugin Name: WP All Import - ACF Add-On
 Plugin URI: http://www.wpallimport.com/
 Description: Import to Advanced Custom Fields. Requires WP All Import & Advanced Custom Fields.
-Version: 3.1.1
+Version: 3.1.3
 Author: Soflyy
 */
 /**
@@ -24,7 +24,7 @@ define('PMAI_ROOT_URL', rtrim(plugin_dir_url(__FILE__), '/'));
  */
 define('PMAI_PREFIX', 'pmai_');
 
-define('PMAI_VERSION', '3.1.1');
+define('PMAI_VERSION', '3.1.3');
 
 if ( class_exists('PMAI_Plugin') and PMAI_EDITION == "free"){
 
@@ -181,11 +181,8 @@ else {
 
 			// create/update required database tables
 
-			// regirster autoloading method
-			if (function_exists('__autoload') and ! in_array('__autoload', spl_autoload_functions())) { // make sure old way of autoloading classes is not broken
-				spl_autoload_register('__autoload');
-			}
-			spl_autoload_register(array($this, '__autoload'));		
+			// register autoloading method
+			spl_autoload_register(array($this, 'autoload'));
 
 			// register helpers
 			if (is_dir(self::ROOT_DIR . '/helpers')) foreach (PMAI_Helper::safe_glob(self::ROOT_DIR . '/helpers/*.php', PMAI_Helper::GLOB_RECURSE | PMAI_Helper::GLOB_PATH) as $filePath) {
@@ -201,7 +198,7 @@ else {
 			update_option($option_name, $this->options);
 			$this->options = get_option(get_class($this) . '_Options');
 
-			register_activation_hook(self::FILE, array($this, '__activation'));
+			register_activation_hook(self::FILE, array($this, 'activation'));
 
 			// register action handlers
 			if (is_dir(self::ROOT_DIR . '/actions')) if (is_dir(self::ROOT_DIR . '/actions')) foreach (PMAI_Helper::safe_glob(self::ROOT_DIR . '/actions/*.php', PMAI_Helper::GLOB_RECURSE | PMAI_Helper::GLOB_PATH) as $filePath) {
@@ -236,21 +233,38 @@ else {
 			}
 
 			// register admin page pre-dispatcher
-			add_action('admin_init', array($this, '__adminInit'));		
+			add_action('admin_init', array($this, 'adminInit'), 1);
+			add_action('init', array($this, 'init'), 10);
 
+		}
+
+		public function init(){
 			self::init_available_acf_fields();
+			$this->load_plugin_textdomain();
+		}
 
+		/**
+		 * Load Localisation files.
+		 *
+		 * Note: the first-loaded translation file overrides any following ones if the same translation is present
+		 *
+		 * @access public
+		 * @return void
+		 */
+		public function load_plugin_textdomain() {
+			$locale = apply_filters( 'plugin_locale', get_locale(), 'wp_all_import_acf_add_on' );
+			load_plugin_textdomain( 'wp_all_import_acf_add_on', false, dirname( plugin_basename( __FILE__ ) ) . '/i18n/languages' );
 		}
 
 		/**
 		 * pre-dispatching logic for admin page controllers
 		 */
-		public function __adminInit() {					
+		public function adminInit() {
 			$input = new PMAI_Input();
 			$page = strtolower($input->getpost('page', ''));
 			if (preg_match('%^' . preg_quote(str_replace('_', '-', self::PREFIX), '%') . '([\w-]+)$%', $page)) {
 				$this->adminDispatcher($page, strtolower($input->getpost('action', 'index')));
-			}			
+			}
 		}
 
 		/**
@@ -262,12 +276,7 @@ else {
 		 */
 		public function shortcodeDispatcher($args, $content, $tag) {
 
-			if (function_exists('preg_replace_callback')){
-				$controllerName = preg_replace_callback('%(^|_).%', array($this, "replace_callback"), $tag);
-			}
-			else{
-				$controllerName =  self::PREFIX . preg_replace('%(^|_).%e', 'strtoupper("$0")', $tag); // capitalize first letters of class name parts and add prefix
-			}
+			$controllerName = self::PREFIX . preg_replace_callback('%(^|_).%', array($this, "replace_callback"), $tag);// capitalize first letters of class name parts and add prefix
 			$controller = new $controllerName();
 			if ( ! $controller instanceof PMAI_Controller) {
 				throw new Exception("Shortcode `$tag` matches to a wrong controller type.");
@@ -302,12 +311,7 @@ else {
 			} else {
 				$actionName = str_replace('-', '_', $action);
 				// capitalize prefix and first letters of class name parts
-				if (function_exists('preg_replace_callback')){
-					$controllerName = preg_replace_callback('%(^' . preg_quote(self::PREFIX, '%') . '|_).%', array($this, "replace_callback"),str_replace('-', '_', $page));
-				}
-				else{
-					$controllerName =  preg_replace('%(^' . preg_quote(self::PREFIX, '%') . '|_).%e', 'strtoupper("$0")', str_replace('-', '_', $page));
-				}
+				$controllerName = preg_replace_callback('%(^' . preg_quote(self::PREFIX, '%') . '|_).%', array($this, "replace_callback"),str_replace('-', '_', $page));
 				if (method_exists($controllerName, $actionName)) {
 					
 					if ( ! get_current_user_id() or ! current_user_can('manage_options')) {
@@ -371,7 +375,7 @@ else {
 		 * @param string $className
 		 * @return bool
 		 */
-		public function __autoload($className) { 
+		public function autoload($className) {
 			$is_prefix = false;
 			$filePath = str_replace('_', '/', preg_replace('%^' . preg_quote(self::PREFIX, '%') . '%', '', strtolower($className), 1, $is_prefix)) . '.php';
 			if ( ! $is_prefix) { // also check file with original letter case
@@ -429,7 +433,7 @@ else {
 		/**
 		 * Plugin activation logic
 		 */
-		public function __activation() {		
+		public function activation() {
 
 			// uncaught exception doesn't prevent plugin from being activated, therefore replace it with fatal error so it does
 			set_exception_handler(create_function('$e', 'trigger_error($e->getMessage(), E_USER_ERROR);'));

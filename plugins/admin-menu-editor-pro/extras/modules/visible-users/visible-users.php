@@ -80,7 +80,7 @@ class ameVisibleUsers {
 				'capabilities' => $capabilities,
 				'roles' => $roles,
 				'is_super_admin' => $is_multisite && is_super_admin($user['ID']),
-				'display_name' => $user['display_name'],
+				'display_name' => strval($user['display_name']),
 				'avatar_html' => get_avatar($user['ID'], 32),
 			);
 		}

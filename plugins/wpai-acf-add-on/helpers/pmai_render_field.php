@@ -42,57 +42,65 @@ if ( ! function_exists('pmai_render_field')){
 					case 'user':
 						?>
 						<input type="text" placeholder="" value="<?php echo esc_attr( $current_field );?>" name="fields<?php echo $field_name;?>[<?php echo $field['key'];?>]" class="text w95 widefat rad4"/>
-						<a href="#help" class="wpallimport-help" title="<?php _e('Specify the user ID, username, or user e-mail address. Separate multiple values with commas.', 'pmxi_plugin'); ?>" style="top:0;">?</a>
+						<a href="#help" class="wpallimport-help" title="<?php _e('Specify the user ID, username, or user e-mail address. Separate multiple values with commas.', 'wp_all_import_acf_add_on'); ?>" style="top:0;">?</a>
 						<?php
 						break;										
 					case 'acf_cf7':
 					case 'gravity_forms_field':					
 						?>
 						<input type="text" placeholder="" value="<?php echo esc_attr( $current_field );?>" name="fields<?php echo $field_name;?>[<?php echo $field['key'];?>]" class="text w95 widefat rad4"/>
-						<a href="#help" class="wpallimport-help" title="<?php _e('Specify the form ID.', 'pmxi_plugin'); ?>" style="top:0;">?</a>
+						<a href="#help" class="wpallimport-help" title="<?php _e('Specify the form ID.', 'wp_all_import_acf_add_on'); ?>" style="top:0;">?</a>
 						<?php
 						break;										
 					case 'page_link':
-					case 'post_object':											
-					case 'relationship':
+					case 'post_object':
 						?>
 						<input type="text" placeholder="" value="<?php echo esc_attr( $current_field );?>" name="fields<?php echo $field_name;?>[<?php echo $field['key'];?>]" class="text w95 widefat rad4"/>
-						<a href="#help" class="wpallimport-help" title="<?php _e('Enter in the ID or slug, or IDs or slugs separated by commas.', 'pmxi_plugin'); ?>" style="top:0;">?</a>
+						<a href="#help" class="wpallimport-help" title="<?php _e('Enter the ID, slug, or Title. Separate multiple entries with commas.', 'wp_all_import_acf_add_on'); ?>" style="top:0;">?</a>
 						<?php
-						break;										
+						break;
+					case 'relationship':
+						?>
+						<div class="input">
+							<input type="text" placeholder="" value="<?php echo ( ! is_array($current_field)) ? esc_attr($current_field) : esc_attr( $current_field['value'] );?>" name="fields<?php echo $field_name;?>[<?php echo $field['key'];?>][value]" class="text widefat rad4" style="width: 75%;"/>
+							<input type="text" style="width:5%; text-align:center;" value="<?php echo (!empty($current_field['delim'])) ? esc_attr( $current_field['delim'] ) : ',';?>" name="fields<?php echo $field_name;?>[<?php echo $field['key'];?>][delim]" class="small rad4">
+							<a href="#help" class="wpallimport-help" title="<?php _e('Enter the ID, slug, or Title. Separate multiple entries with separator character.', 'wp_all_import_acf_add_on'); ?>" style="top:0;">?</a>
+						</div>
+						<?php
+						break;
 					case 'file':
 						?>
 						<input type="text" placeholder="" value="<?php echo (!is_array($current_field)) ? esc_attr( $current_field ) : esc_attr( $current_field['url'] );?>" name="fields<?php echo $field_name;?>[<?php echo $field['key'];?>][url]" class="text w95 widefat rad4"/>
-						<a href="#help" class="wpallimport-help" title="<?php _e('Specify the URL to the image or file.', 'pmxi_plugin'); ?>" style="top:0;">?</a>			
+						<a href="#help" class="wpallimport-help" title="<?php _e('Specify the URL to the image or file.', 'wp_all_import_acf_add_on'); ?>" style="top:0;">?</a>
 						<input type="hidden" name="fields<?php echo $field_name;?>[<?php echo $field['key'];?>][search_in_media]" value="0"/>
 						<input type="checkbox" id="<?php echo $field_name . $field['key'] . '_search_in_media';?>" name="fields<?php echo $field_name;?>[<?php echo $field['key'];?>][search_in_media]" value="1" <?php echo (!empty($current_field['search_in_media'])) ? 'checked="checked"' : '';?>/>
-						<label for="<?php echo $field_name . $field['key'] . '_search_in_media';?>"><?php _e('Search through the Media Library for existing images before importing new images', 'wp_all_import_plugin'); ?></label>
-						<a href="#help" class="wpallimport-help" title="<?php _e('If an image with the same file name is found in the Media Library then that image will be attached to this record instead of importing a new image. Disable this setting if your import has different images with the same file name.', 'wp_all_import_plugin') ?>" style="position: relative; top: -2px;">?</a>
+						<label for="<?php echo $field_name . $field['key'] . '_search_in_media';?>"><?php _e('Search through the Media Library for existing images before importing new images', 'wp_all_import_acf_add_on'); ?></label>
+						<a href="#help" class="wpallimport-help" title="<?php _e('If an image with the same file name is found in the Media Library then that image will be attached to this record instead of importing a new image. Disable this setting if your import has different images with the same file name.', 'wp_all_import_acf_add_on') ?>" style="position: relative; top: -2px;">?</a>
 						<?php
 						break;
 					case 'image':
 						?>
 						<input type="text" placeholder="" value="<?php echo (!is_array($current_field)) ? esc_attr( $current_field ) : esc_attr( $current_field['url'] );?>" name="fields<?php echo $field_name;?>[<?php echo $field['key'];?>][url]" class="text w95 widefat rad4"/>
-						<a href="#help" class="wpallimport-help" title="<?php _e('Specify the URL to the image or file.', 'pmxi_plugin'); ?>" style="top:0;">?</a>
+						<a href="#help" class="wpallimport-help" title="<?php _e('Specify the URL to the image or file.', 'wp_all_import_acf_add_on'); ?>" style="top:0;">?</a>
 						<input type="hidden" name="fields<?php echo $field_name;?>[<?php echo $field['key'];?>][search_in_media]" value="0"/>
 						<input type="checkbox" id="<?php echo $field_name . $field['key'] . '_search_in_media';?>" name="fields<?php echo $field_name;?>[<?php echo $field['key'];?>][search_in_media]" value="1" <?php echo (!empty($current_field['search_in_media'])) ? 'checked="checked"' : '';?>/>
-						<label for="<?php echo $field_name . $field['key'] . '_search_in_media';?>"><?php _e('Search through the Media Library for existing images before importing new images', 'wp_all_import_plugin'); ?></label>
-						<a href="#help" class="wpallimport-help" title="<?php _e('If an image with the same file name is found in the Media Library then that image will be attached to this record instead of importing a new image. Disable this setting if your import has different images with the same file name.', 'wp_all_import_plugin') ?>" style="position: relative; top: -2px;">?</a>
+						<label for="<?php echo $field_name . $field['key'] . '_search_in_media';?>"><?php _e('Search through the Media Library for existing images before importing new images', 'wp_all_import_acf_add_on'); ?></label>
+						<a href="#help" class="wpallimport-help" title="<?php _e('If an image with the same file name is found in the Media Library then that image will be attached to this record instead of importing a new image. Disable this setting if your import has different images with the same file name.', 'wp_all_import_acf_add_on') ?>" style="position: relative; top: -2px;">?</a>
 						<?php
 						break;					
 					case 'gallery':
 						?>
 						<div class="input">
-							<label><?php _e('Enter image URL one per line, or separate them with a', 'pmxi_plugin'); ?> </label>
+							<label><?php _e('Enter image URL one per line, or separate them with a', 'wp_all_import_acf_add_on'); ?> </label>
 							<input type="text" style="width:5%; text-align:center;" value="<?php echo (!empty($current_field['delim'])) ? esc_attr( $current_field['delim'] ) : '';?>" name="fields<?php echo $field_name;?>[<?php echo $field['key'];?>][delim]" class="small rad4">
 							<textarea placeholder="http://example.com/images/image-1.jpg" style="clear: both; display: block; margin-top: 10px;" class="newline rad4" name="fields<?php echo $field_name;?>[<?php echo $field['key'];?>][gallery]"><?php echo ( ! is_array($current_field)) ? esc_attr($current_field) : esc_attr( $current_field['gallery'] );?></textarea>			
 							<input type="hidden" name="fields<?php echo $field_name;?>[<?php echo $field['key'];?>][search_in_media]" value="0"/>
 							<input type="checkbox" id="<?php echo $field_name . $field['key'] . '_search_in_media';?>" name="fields<?php echo $field_name;?>[<?php echo $field['key'];?>][search_in_media]" value="1" <?php echo (!empty($current_field['search_in_media'])) ? 'checked="checked"' : '';?>/>
-							<label for="<?php echo $field_name . $field['key'] . '_search_in_media';?>"><?php _e('Search through the Media Library for existing images before importing new images', 'wp_all_import_plugin'); ?></label>
-							<a href="#help" class="wpallimport-help" title="<?php _e('If an image with the same file name is found in the Media Library then that image will be attached to this record instead of importing a new image. Disable this setting if your import has different images with the same file name.', 'wp_all_import_plugin') ?>" style="position: relative; top: -2px;">?</a>
+							<label for="<?php echo $field_name . $field['key'] . '_search_in_media';?>"><?php _e('Search through the Media Library for existing images before importing new images', 'wp_all_import_acf_add_on'); ?></label>
+							<a href="#help" class="wpallimport-help" title="<?php _e('If an image with the same file name is found in the Media Library then that image will be attached to this record instead of importing a new image. Disable this setting if your import has different images with the same file name.', 'wp_all_import_acf_add_on') ?>" style="position: relative; top: -2px;">?</a>
 							<div class="input">
 								<input type="checkbox" id="<?php echo $field_name . $field['key'] . '_only_append_new';?>" name="fields<?php echo $field_name;?>[<?php echo $field['key'];?>][only_append_new]" value="1" <?php echo (!empty($current_field['only_append_new'])) ? 'checked="checked"' : '';?>/>
-								<label for="<?php echo $field_name . $field['key'] . '_only_append_new';?>"><?php _e('Append only new images and do not touch existing during updating gallery field.', 'wp_all_import_plugin'); ?></label>
+								<label for="<?php echo $field_name . $field['key'] . '_only_append_new';?>"><?php _e('Append only new images and do not touch existing during updating gallery field.', 'wp_all_import_acf_add_on'); ?></label>
 							</div>
 						</div>
 						<?php
@@ -100,7 +108,7 @@ if ( ! function_exists('pmai_render_field')){
 					case 'color_picker':					
 						?>
 						<input type="text" placeholder="" value="<?php echo esc_attr( $current_field );?>" name="fields<?php echo $field_name;?>[<?php echo $field['key'];?>]" class="text w95 widefat rad4"/>
-						<a href="#help" class="wpallimport-help" title="<?php _e('Specify the hex code the color preceded with a # - e.g. #ea5f1a.', 'pmxi_plugin'); ?>" style="top:0;">?</a>
+						<a href="#help" class="wpallimport-help" title="<?php _e('Specify the hex code the color preceded with a # - e.g. #ea5f1a.', 'wp_all_import_acf_add_on'); ?>" style="top:0;">?</a>
 						<?php
 						break;					
 					case 'text':					
@@ -124,15 +132,21 @@ if ( ! function_exists('pmai_render_field')){
 					case 'date_picker':
 						?>
 						<input type="text" placeholder="" value="<?php echo esc_attr( $current_field );?>" name="fields<?php echo $field_name; ?>[<?php echo $field['key'];?>]" class="text datepicker widefat rad4" style="width:200px;"/>
-						<a href="#help" class="wpallimport-help" title="<?php _e('Use any format supported by the PHP strtotime function.', 'pmxi_plugin'); ?>" style="top:0;">?</a>
+						<a href="#help" class="wpallimport-help" title="<?php _e('Use any format supported by the PHP strtotime function.', 'wp_all_import_acf_add_on'); ?>" style="top:0;">?</a>
 						<?php
 						break;		
 					case 'date_time_picker':
 						?>
 						<input type="text" placeholder="" value="<?php echo esc_attr( $current_field );?>" name="fields<?php echo $field_name; ?>[<?php echo $field['key'];?>]" class="text datetimepicker widefat rad4" style="width:200px;"/>
-						<a href="#help" class="wpallimport-help" title="<?php _e('Use any format supported by the PHP strtotime function.', 'pmxi_plugin'); ?>" style="top:0;">?</a>
+						<a href="#help" class="wpallimport-help" title="<?php _e('Use any format supported by the PHP strtotime function.', 'wp_all_import_acf_add_on'); ?>" style="top:0;">?</a>
 						<?php
-						break;		
+						break;
+					case 'time_picker':
+						?>
+						<input type="text" placeholder="" value="<?php echo esc_attr( $current_field );?>" name="fields<?php echo $field_name; ?>[<?php echo $field['key'];?>]" class="text widefat rad4" style="width:200px;"/>
+						<a href="#help" class="wpallimport-help" title="<?php _e('Use H:i:s format.', 'wp_all_import_acf_add_on'); ?>" style="top:0;">?</a>
+						<?php
+						break;
 					case 'location-field':
 						?>
 						<div class="input">
@@ -148,7 +162,8 @@ if ( ! function_exists('pmai_render_field')){
 							<input type="text" placeholder="" value="<?php echo esc_attr( $current_field['lng'] );?>" name="fields<?php echo $field_name; ?>[<?php echo $field['key'];?>][lng]" class="text widefat rad4"/>
 						</div>
 						<?php
-						break;	
+						break;
+					case 'google_map_extended':
 					case 'google_map':					
 						?>
 						<div class="input">
@@ -209,6 +224,20 @@ if ( ! function_exists('pmai_render_field')){
 							 	</div>
 							 </div>
 						</div>
+						<?php if ($field['type'] == 'google_map_extended'): ?>
+						<div class="input">
+							<label><?php _e("Zoom"); ?></label>
+							<input type="text" placeholder="" value="<?php echo esc_attr( $current_field['zoom'] );?>" name="fields<?php echo $field_name; ?>[<?php echo $field['key'];?>][zoom]" class="text widefat rad4"/>
+						</div>
+						<div class="input">
+							<label><?php _e("Center lat"); ?></label>
+							<input type="text" placeholder="" value="<?php echo esc_attr( $current_field['center_lat'] );?>" name="fields<?php echo $field_name; ?>[<?php echo $field['key'];?>][center_lat]" class="text widefat rad4"/>
+						</div>
+						<div class="input">
+							<label><?php _e("Center lng"); ?></label>
+							<input type="text" placeholder="" value="<?php echo esc_attr( $current_field['center_lng'] );?>" name="fields<?php echo $field_name; ?>[<?php echo $field['key'];?>][center_lng]" class="text widefat rad4"/>
+						</div>
+						<?php endif;?>
 					<?php
 						break;					
 					case 'paypal_item':
@@ -235,7 +264,7 @@ if ( ! function_exists('pmai_render_field')){
 						<div class="input">
 							<div class="main_choise">
 								<input type="radio" id="is_multiple_field_value_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_yes" class="switcher" name="is_multiple_field_value<?php echo $field_name; ?>[<?php echo $field['key'];?>]" value="yes" <?php echo 'no' != $current_is_multiple_field_value ? 'checked="checked"': '' ?>/>
-								<label for="is_multiple_field_value_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_yes" class="chooser_label"><?php _e("Select value for all records", "pmxi_plugin"); ?></label>
+								<label for="is_multiple_field_value_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_yes" class="chooser_label"><?php _e("Select value for all records", 'wp_all_import_acf_add_on'); ?></label>
 							</div>
 							<div class="wpallimport-clear"></div>
 							<div class="switcher-target-is_multiple_field_value_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_yes">
@@ -248,10 +277,13 @@ if ( ! function_exists('pmai_render_field')){
 											$field_class = 'acf_field_' . $field['type'];										
 
 											$field['other_choice'] = false;
-											$field['_input'] = 'multiple_value'. $field_name .'[' . $field['key'] . ']';
-											$field['value'] = $current_multiple_value;									
+											$tmp_key = $field['key'];
+											$field['key'] = 'multiple_value'. $field_name .'[' . $field['key'] . ']';
+											$field['value'] = $current_multiple_value;
 
 											acf_render_field( $field );
+
+											$field['key'] = $tmp_key;
 											
 										}
 										else{
@@ -261,7 +293,7 @@ if ( ! function_exists('pmai_render_field')){
 
 											$field['other_choice'] = false;
 											$field['name'] = 'multiple_value'. $field_name .'[' . $field['key'] . ']';
-											$field['value'] = $current_multiple_value;									
+											$field['value'] = $current_multiple_value;// === false ? $current_field : $current_multiple_value;
 
 											$new_field->create_field( $field );
 
@@ -278,7 +310,7 @@ if ( ! function_exists('pmai_render_field')){
 						<div class="input">
 							<div class="main_choise">
 								<input type="radio" id="is_multiple_field_value_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_no" class="switcher" name="is_multiple_field_value<?php echo $field_name; ?>[<?php echo $field['key'];?>]" value="no" <?php echo 'no' == $current_is_multiple_field_value ? 'checked="checked"': '' ?>/>
-								<label for="is_multiple_field_value_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_no" class="chooser_label"><?php _e('Set with XPath', 'pmxi_plugin' )?></label>
+								<label for="is_multiple_field_value_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_no" class="chooser_label"><?php _e('Set with XPath', 'wp_all_import_acf_add_on' )?></label>
 							</div>
 							<div class="wpallimport-clear"></div>
 							<div class="switcher-target-is_multiple_field_value_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_no">
@@ -288,11 +320,11 @@ if ( ! function_exists('pmai_render_field')){
 										<?php										
 											if ($field['type']=='select' || $field['type']=='checkbox' || $field['type']=='radio') {
 												?>
-												<a href="#help" class="wpallimport-help" style="top:0;" title="<?php _e('Specify the value. For multiple values, separate with commas. If the choices are of the format option : Option, option-2 : Option 2, use option and option-2 for values.', 'pmxi_plugin') ?>">?</a>
+												<a href="#help" class="wpallimport-help" style="top:0;" title="<?php _e('Specify the value. For multiple values, separate with commas. If the choices are of the format option : Option, option-2 : Option 2, use option and option-2 for values.', 'wp_all_import_acf_add_on') ?>">?</a>
 												<?php
 											} else {
 												?>
-												<a href="#help" class="wpallimport-help" style="top:0;" title="<?php _e('Specify the 0 for false, 1 for true.', 'pmxi_plugin') ?>">?</a>
+												<a href="#help" class="wpallimport-help" style="top:0;" title="<?php _e('Specify the 0 for false, 1 for true.', 'wp_all_import_acf_add_on') ?>">?</a>
 												<?php
 											}
 										?>
@@ -319,11 +351,13 @@ if ( ! function_exists('pmai_render_field')){
 
 											$field_class = 'acf_field_' . $field['type'];										
 
-											$field['other_choice'] = false;
-											$field['_input'] = 'multiple_value'. $field_name .'[' . $field['key'] . ']';
-											$field['value'] = $current_multiple_value;									
+											$tmp_key = $field['key'];
+											$field['key'] = 'multiple_value'. $field_name .'[' . $field['key'] . ']';
+											$field['value'] = $current_multiple_value;
 
 											acf_render_field( $field );
+
+											$field['key'] = $tmp_key;
 
 										} else{
 										
@@ -346,7 +380,7 @@ if ( ! function_exists('pmai_render_field')){
 						<div class="input" style="overflow:hidden;">
 							<div class="main_choise">
 								<input type="radio" id="is_multiple_field_value_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_no" class="switcher" name="is_multiple_field_value<?php echo $field_name; ?>[<?php echo $field['key'];?>]" value="no" <?php echo 'no' == $current_is_multiple_field_value ? 'checked="checked"': '' ?>/>
-								<label for="is_multiple_field_value_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_no" class="chooser_label"><?php _e('Set with XPath', 'pmxi_plugin' )?></label>
+								<label for="is_multiple_field_value_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_no" class="chooser_label"><?php _e('Set with XPath', 'wp_all_import_acf_add_on' )?></label>
 							</div>
 							<div class="wpallimport-clear"></div>
 							<div class="switcher-target-is_multiple_field_value_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_no">
@@ -378,7 +412,7 @@ if ( ! function_exists('pmai_render_field')){
 																	}; else:?>
 																	<li id="item_1" class="dragging">
 																		<div class="drag-element" >
-																			<!--input type="checkbox" class="assign_post" checked="checked" title="<?php _e('Assign post to the taxonomy.','pmxi_plugin');?>"/-->														
+																			<!--input type="checkbox" class="assign_post" checked="checked" title="<?php _e('Assign post to the taxonomy.','wp_all_import_acf_add_on');?>"/-->
 																			<input type="text" class="widefat xpath_field rad4" value=""/>
 																			<a href="javascript:void(0);" class="icon-item remove-ico"></a>
 																		</div>
@@ -387,7 +421,7 @@ if ( ! function_exists('pmai_render_field')){
 																  else: ?>
 														    <li id="item_1" class="dragging">
 														    	<div class="drag-element">
-														    		<!--input type="checkbox" class="assign_post" checked="checked" title="<?php _e('Assign post to the taxonomy.','pmxi_plugin');?>"/-->									    		
+														    		<!--input type="checkbox" class="assign_post" checked="checked" title="<?php _e('Assign post to the taxonomy.','wp_all_import_acf_add_on');?>"/-->
 														    		<input type="text" class="widefat xpath_field rad4" value=""/>
 														    		<a href="javascript:void(0);" class="icon-item remove-ico"></a>
 														    	</div>
@@ -395,7 +429,7 @@ if ( ! function_exists('pmai_render_field')){
 															<?php endif;?>
 															<li id="item" class="template">
 														    	<div class="drag-element">
-														    		<!--input type="checkbox" class="assign_post" checked="checked" title="<?php _e('Assign post to the taxonomy.','pmxi_plugin');?>"/-->									    		
+														    		<!--input type="checkbox" class="assign_post" checked="checked" title="<?php _e('Assign post to the taxonomy.','wp_all_import_acf_add_on');?>"/-->
 														    		<input type="text" class="widefat xpath_field rad4" value=""/>
 														    		<a href="javascript:void(0);" class="icon-item remove-ico"></a>
 														    	</div>
@@ -404,7 +438,7 @@ if ( ! function_exists('pmai_render_field')){
 														<input type="hidden" class="hierarhy-output" name="fields<?php echo $field_name; ?>[<?php echo $field['key'];?>]" value="<?php echo esc_attr($current_field); ?>"/>													
 														<?php //$taxonomies_hierarchy = json_decode($current_field, true);?>
 														<div class="delim">														
-															<a href="javascript:void(0);" class="icon-item add-new-ico"><?php _e('Add more','pmxi_plugin');?></a>
+															<a href="javascript:void(0);" class="icon-item add-new-ico"><?php _e('Add more','wp_all_import_acf_add_on');?></a>
 														</div>
 													</div>
 												</td>
@@ -425,7 +459,7 @@ if ( ! function_exists('pmai_render_field')){
 							
 								<div class="input">
 									<input type="radio" id="is_variable_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_no" class="switcher variable_repeater_mode" name="fields<?php echo $field_name; ?>[<?php echo $field['key'];?>][is_variable]" value="no" <?php echo 'yes' != $current_field['is_variable'] ? 'checked="checked"': '' ?>/>
-									<label for="is_variable_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_no" class="chooser_label"><?php _e('Fixed Repeater Mode', 'pmxi_plugin' )?></label>
+									<label for="is_variable_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_no" class="chooser_label"><?php _e('Fixed Repeater Mode', 'wp_all_import_acf_add_on' )?></label>
 								</div>
 								<div class="wpallimport-clear"></div>
 								<div class="switcher-target-is_variable_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_no">
@@ -433,18 +467,18 @@ if ( ! function_exists('pmai_render_field')){
 										<div class="input">
 											<input type="hidden" name="fields<?php echo $field_name; ?>[<?php echo $field['key'];?>][is_ignore_empties]" value="0"/>
 											<input type="checkbox" value="1" id="is_ignore_empties<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>" name="fields<?php echo $field_name; ?>[<?php echo $field['key'];?>][is_ignore_empties]" <?php if ( ! empty($current_field['is_ignore_empties'])) echo 'checked="checked';?>/>
-											<label for="is_ignore_empties<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>"><?php _e('Ignore blank fields', 'pmxi_plugin'); ?></label>
-											<a href="#help" class="wpallimport-help" style="top:0;" title="<?php _e('If the value of the element or column in your file is blank, it will be ignored. Use this option when some records in your file have a different number of repeating elements than others.', 'pmxi_plugin') ?>">?</a>
+											<label for="is_ignore_empties<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>"><?php _e('Ignore blank fields', 'wp_all_import_acf_add_on'); ?></label>
+											<a href="#help" class="wpallimport-help" style="top:0;" title="<?php _e('If the value of the element or column in your file is blank, it will be ignored. Use this option when some records in your file have a different number of repeating elements than others.', 'wp_all_import_acf_add_on') ?>">?</a>
 										</div>
 									</div>
 								</div>
 								<div class="input">
 									<input type="radio" id="is_variable_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_yes" class="switcher variable_repeater_mode" name="fields<?php echo $field_name; ?>[<?php echo $field['key'];?>][is_variable]" value="yes" <?php echo 'yes' == $current_field['is_variable'] ? 'checked="checked"': '' ?>/>
-									<label for="is_variable_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_yes" class="chooser_label"><?php _e('Variable Repeater Mode (XML)', 'pmxi_plugin' )?></label>
+									<label for="is_variable_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_yes" class="chooser_label"><?php _e('Variable Repeater Mode (XML)', 'wp_all_import_acf_add_on' )?></label>
 								</div>																	
 								<div class="input">
 									<input type="radio" id="is_variable_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_yes_csv" class="switcher variable_repeater_mode" name="fields<?php echo $field_name; ?>[<?php echo $field['key'];?>][is_variable]" value="csv" <?php echo 'csv' == $current_field['is_variable'] ? 'checked="checked"': '' ?>/>
-									<label for="is_variable_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_yes_csv" class="chooser_label"><?php _e('Variable Repeater Mode (CSV)', 'pmxi_plugin' )?></label>									
+									<label for="is_variable_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_yes_csv" class="chooser_label"><?php _e('Variable Repeater Mode (CSV)', 'wp_all_import_acf_add_on' )?></label>
 								</div>																	
 								<div class="wpallimport-clear"></div>
 								<div class="switcher-target-is_variable_<?php echo str_replace(array('[',']'), '', $field_name);?>_<?php echo $field['key'];?>_yes">
@@ -452,7 +486,7 @@ if ( ! function_exists('pmai_render_field')){
 										<div class="input">
 											<p>
 												<?php printf(__("For each %s do ..."), '<input type="text" name="fields' . $field_name . '[' . $field["key"] . '][foreach]" value="'. $current_field["foreach"] .'" class="pmai_foreach widefat rad4"/>'); ?>											
-												<a href="http://www.wpallimport.com/documentation/advanced-custom-fields/repeater-fields/" target="_blank"><?php _e('(documentation)', 'pmxi_plugin'); ?></a>
+												<a href="http://www.wpallimport.com/documentation/advanced-custom-fields/repeater-fields/" target="_blank"><?php _e('(documentation)', 'wp_all_import_acf_add_on'); ?></a>
 											</p>
 										</div>
 									</div>
@@ -462,7 +496,7 @@ if ( ! function_exists('pmai_render_field')){
 										<div class="input">
 											<p>
 												<?php printf(__("Separator Character %s"), '<input type="text" name="fields' . $field_name . '[' . $field["key"] . '][separator]" value="'. ( (empty($current_field["separator"])) ? '|' : $current_field["separator"] ) .'" class="pmai_variable_separator widefat rad4"/>'); ?>											
-												<a href="#help" class="wpallimport-help" style="top:0;" title="<?php _e('Use this option when importing a CSV file with a column or columns that contains the repeating data, separated by separators. For example, if you had a repeater with two fields - image URL and caption, and your CSV file had two columns, image URL and caption, with values like \'url1,url2,url3\' and \'caption1,caption2,caption3\', use this option and specify a comma as the separator.', 'pmxi_plugin') ?>">?</a>
+												<a href="#help" class="wpallimport-help" style="top:0;" title="<?php _e('Use this option when importing a CSV file with a column or columns that contains the repeating data, separated by separators. For example, if you had a repeater with two fields - image URL and caption, and your CSV file had two columns, image URL and caption, with values like \'url1,url2,url3\' and \'caption1,caption2,caption3\', use this option and specify a comma as the separator.', 'wp_all_import_acf_add_on') ?>">?</a>
 											</p>
 										</div>
 									</div>
@@ -599,20 +633,43 @@ if ( ! function_exists('pmai_render_field')){
 														    }															
 														}
 
-														if ( ! empty($parent_field_id) )
+														if (is_numeric($parent_field_id) && $parent_field_id > 0)
 														{
-															if (is_numeric($parent_field_id))
-															{
 
-																$sub_fields = get_posts(array('posts_per_page' => -1, 'post_type' => 'acf-field', 'post_parent' => $parent_field_id, 'post_status' => 'publish'));
+															$sub_fields = get_posts(array('posts_per_page' => -1, 'post_type' => 'acf-field', 'post_parent' => $parent_field_id, 'post_status' => 'publish'));
 
-																if ( ! empty($sub_fields) ){
+															if ( ! empty($sub_fields) ){
 
-																	foreach ($sub_fields as $key => $sub_field){
-																		$sub_fieldData = (!empty($sub_field->post_content)) ? unserialize($sub_field->post_content) : array();			
-																		$sub_fieldData['ID'] = $sub_field->ID;
-																		$sub_fieldData['label'] = $sub_field->post_title;
-																		$sub_fieldData['key'] = $sub_field->post_name;																
+																foreach ($sub_fields as $key => $sub_field){
+																	$sub_fieldData = (!empty($sub_field->post_content)) ? unserialize($sub_field->post_content) : array();
+																	$sub_fieldData['ID'] = $sub_field->ID;
+																	$sub_fieldData['label'] = $sub_field->post_title;
+																	$sub_fieldData['key'] = $sub_field->post_name;
+																	?>
+																	<tr class="field sub_field field_type-<?php echo $sub_fieldData['type'];?> field_key-<?php echo $sub_fieldData['key'];?>">
+																		<td class="label">
+																			<?php echo $sub_fieldData['label'];?>
+																		</td>
+																		<td>
+																			<div class="inner">
+																				<?php echo pmai_render_field($sub_fieldData, $post, $field_name . "[" . $field['key'] . "][rows][ROWNUMBER]"); ?>
+																			</div>
+																		</td>
+																	</tr>
+																	<?php
+																}
+															}
+														}
+														else
+														{
+															$fields = acf_local()->fields;
+
+															if (!empty($fields)){
+																foreach ($fields as $sub_field) {
+																	if ($sub_field['parent'] == $field['key']){
+																		$sub_fieldData = $sub_field;
+																		$sub_fieldData['ID'] = $sub_fieldData['id']    = uniqid();
+
 																		?>
 																		<tr class="field sub_field field_type-<?php echo $sub_fieldData['type'];?> field_key-<?php echo $sub_fieldData['key'];?>">
 																			<td class="label">
@@ -621,40 +678,15 @@ if ( ! function_exists('pmai_render_field')){
 																			<td>
 																				<div class="inner">
 																					<?php echo pmai_render_field($sub_fieldData, $post, $field_name . "[" . $field['key'] . "][rows][ROWNUMBER]"); ?>
-																				</div>	
+																				</div>
 																			</td>
-																		</tr>													
-																		<?php 
+																		</tr>
+																		<?php
 																	}
 																}
 															}
-															else
-															{
-																$fields = acf_local()->fields;
-					
-																if (!empty($fields)){
-																	foreach ($fields as $sub_field) {
-																		if ($sub_field['parent'] == $field['key']){								
-																			$sub_fieldData = $sub_field;																	
-																			$sub_fieldData['ID'] = $sub_fieldData['id']    = uniqid();																			
-
-																			?>
-																			<tr class="field sub_field field_type-<?php echo $sub_fieldData['type'];?> field_key-<?php echo $sub_fieldData['key'];?>">
-																				<td class="label">
-																					<?php echo $sub_fieldData['label'];?>
-																				</td>
-																				<td>
-																					<div class="inner">
-																						<?php echo pmai_render_field($sub_fieldData, $post, $field_name . "[" . $field['key'] . "][rows][ROWNUMBER]"); ?>
-																					</div>	
-																				</td>
-																			</tr>													
-																			<?php 
-																		}
-																	}
-																}	
-															}
 														}
+
 													}	
 													else { 
 
@@ -684,10 +716,10 @@ if ( ! function_exists('pmai_render_field')){
 								<div class="input sub_input">
 									<ul class="hl clearfix repeater-footer">
 										<li class="right">
-											<a href="javascript:void(0);" class="acf-button delete_row" style="margin-left:15px;"><?php _e('Delete Row', 'pmxi_plugin'); ?></a>
+											<a href="javascript:void(0);" class="acf-button delete_row" style="margin-left:15px;"><?php _e('Delete Row', 'wp_all_import_acf_add_on'); ?></a>
 										</li>
 										<li class="right">
-											<a class="add-row-end acf-button" href="javascript:void(0);"><?php _e("Add Row", "pmxi_plugin");?></a>									
+											<a class="add-row-end acf-button" href="javascript:void(0);"><?php _e("Add Row", 'wp_all_import_acf_add_on');?></a>
 										</li>								
 									</ul>							
 								</div>							
@@ -759,16 +791,7 @@ if ( ! function_exists('pmai_render_field')){
 
 						if ($acf and version_compare($acf->settings['version'], '5.0.0') >= 0){
 
-							if (empty($field['prefix_name'])){
-								?>
-								<p>
-									<?php
-									_e('As this field is configured to clone the data entered into another ACF field, no import options exist for it. Please import your data into the ACF field that this field is cloning.', 'pmxi_plugin');
-									?>
-								</p>
-								<?php
-							}
-							elseif (!empty($field['clone'])) {
+							if (!empty($field['clone'])) {
 								$sub_fields = array();
 								foreach ($field['clone'] as $sub_field_key) {
 									$args = array(
@@ -806,7 +829,7 @@ if ( ! function_exists('pmai_render_field')){
 							?>
 							<p>
 								<?php
-								_e('This field type is not supported. E-mail support@soflyy.com with the details of the custom ACF field you are trying to import to, as well as a link to download the plugin to install to add this field type to ACF, and we will investigate the possiblity ot including support for it in the ACF add-on.', 'pmxi_plugin');
+								_e('This field type is not supported. E-mail support@soflyy.com with the details of the custom ACF field you are trying to import to, as well as a link to download the plugin to install to add this field type to ACF, and we will investigate the possiblity ot including support for it in the ACF add-on.', 'wp_all_import_acf_add_on');
 								?>
 							</p>
 							<?php
@@ -1213,7 +1236,7 @@ if ( ! function_exists('pmai_render_field')){
 										<?php
 									}?>
 								</select>
-								<a href="javascript:void(0);" class="acf-button delete_layout" style="float:right; margin-top: 10px;"><?php _e("Delete Layout", "pmxi_plugin"); ?></a>
+								<a href="javascript:void(0);" class="acf-button delete_layout" style="float:right; margin-top: 10px;"><?php _e("Delete Layout", 'wp_all_import_acf_add_on'); ?></a>
 							</div>
 						</div>
 						<?php
@@ -1227,7 +1250,7 @@ if ( ! function_exists('pmai_render_field')){
 						?>
 						<p>
 							<?php
-								_e('This field type is not supported. E-mail support@soflyy.com with the details of the custom ACF field you are trying to import to, as well as a link to download the plugin to install to add this field type to ACF, and we will investigate the possiblity ot including support for it in the ACF add-on.', 'pmxi_plugin');
+								_e('This field type is not supported. E-mail support@soflyy.com with the details of the custom ACF field you are trying to import to, as well as a link to download the plugin to install to add this field type to ACF, and we will investigate the possiblity ot including support for it in the ACF add-on.', 'wp_all_import_acf_add_on');
 							?>
 						</p>
 						<?php

@@ -27,7 +27,7 @@
 					
 			<?php			
 
-			switch ($this->options[$option_slug . 'download_images']) {
+			switch ($post[$option_slug . 'download_images']) {
 				case 'no':
 					$featured_delim = $post[$get['slug'] . 'featured_delim'];
 					break;
@@ -104,7 +104,7 @@
 							$img_ext = pmxi_getExtensionFromStr($img);									
 							$default_extension = pmxi_getExtension($bn);																									
 
-							$image_name = apply_filters("wp_all_import_image_filename", urldecode(sanitize_file_name((($img_ext) ? str_replace("." . $default_extension, "", $bn) : $bn))) . (("" != $img_ext) ? '.' . $img_ext : ''));
+							$image_name = apply_filters("wp_all_import_image_filename", urldecode((($img_ext) ? str_replace("." . $default_extension, "", $bn) : $bn)) . (("" != $img_ext) ? '.' . $img_ext : ''));
 
 							?>
 
@@ -121,7 +121,7 @@
 						$img_ext = pmxi_getExtensionFromStr($img);									
 						$default_extension = pmxi_getExtension($bn);																									
 
-						$image_name = apply_filters("wp_all_import_image_filename", urldecode(sanitize_file_name((($img_ext) ? str_replace("." . $default_extension, "", $bn) : $bn))) . (("" != $img_ext) ? '.' . $img_ext : ''));						
+						$image_name = apply_filters("wp_all_import_image_filename", urldecode((($img_ext) ? str_replace("." . $default_extension, "", $bn) : $bn)) . (("" != $img_ext) ? '.' . $img_ext : ''));
 
 						$attch   = wp_all_import_get_image_from_gallery($image_name);
 						
