@@ -22,14 +22,16 @@ class WS_Init_Actions extends WS_Action_Set {
 	public function setup() {
 
 		//add additional featured image sizes
-		//NOTE: wordpress will allow hyphens in these names, but swig or the API(i'm not sure) will not
+		//NOTE: avoid hyphens in names as they could create errors in frontend
 		if ( function_exists( 'add_image_size' ) ) {
-			add_image_size( 'person', 500, 500, false );
-			add_image_size( 'news', 512, 275, true );
-			add_image_size( 'story', 400, 286, true );
-			add_image_size( 'testimonial', 1024, 550, true );	
-			add_image_size( 'projectslideshow', 1440, 1440, false );
-			add_image_size( 'category', 1680, 600, true );
+			add_image_size( 'xs', 300, 300, false );
+			add_image_size( 'sm', 600, 600, false );
+			add_image_size( 'md', 900, 900, false );	
+			add_image_size( 'lg', 1200, 1200, false );
+			add_image_size( 'xl', 1920, 1920, false );	
+			add_image_size( 'facebook-small', 600, 315, true );	
+			add_image_size( 'facebook', 1200, 630, true );	
+			add_image_size( 'person', 500, 500, true );					
 			add_image_size( 'hero', 1680, 1050, false );
 		}
 
@@ -40,53 +42,8 @@ class WS_Init_Actions extends WS_Action_Set {
 
 		//register post types
 		//optional - include a custom icon, list of icons available at https://developer.wordpress.org/resource/dashicons/
-		register_post_type( 'projects',
-			array(
-				'labels' => array(
-					'name' => 'Projects',
-					'singular_name' =>'Project',
-					'add_new' => 'Add New',
-					'add_new_item' => 'Add New Project',
-					'edit_item' => 'Edit Project',
-					'new_item' => 'New Project',
-					'all_items' => 'All Projects',
-					'view_item' => 'View Project',
-					'search_items' => 'Search Projects',
-					'not_found' =>  'No Projects found',
-					'not_found_in_trash' => 'No Projects found in Trash',
-					),
-				'public' => true,
-				'has_archive' => true,
-				'rewrite' => array('slug' => 'projects'),
-				'show_in_rest'       => true,
-				'rest_base'          => 'projects',
-				'rest_controller_class' => 'WP_REST_Posts_Controller',
-				'supports' => array( 'title', 'thumbnail'),
-				'menu_icon'   => 'dashicons-building'
-				));
 
-		register_taxonomy(
-			'project_categories',
-			'projects',
-			array(
-				'hierarchical' => true,
-				'label' => 'Project Categories',
-				'query_var' => true,
-				'rewrite' => array('slug' => 'project_categories'),
-				'rest_base'          => 'project_categories',
-				'rest_controller_class' => 'WP_REST_Terms_Controller',
-				)
-			);
-
-		global $wp_taxonomies;
-		$taxonomy_name = 'project_categories';
-
-		if ( isset( $wp_taxonomies[ $taxonomy_name ] ) ) {
-			$wp_taxonomies[ $taxonomy_name ]->show_in_rest = true;
-			$wp_taxonomies[ $taxonomy_name ]->rest_base = $taxonomy_name;
-			$wp_taxonomies[ $taxonomy_name ]->rest_controller_class = 'WP_REST_Terms_Controller';
-		}
-
+		//people
 		register_post_type( 'people',
 			array(
 				'labels' => array(
@@ -112,6 +69,27 @@ class WS_Init_Actions extends WS_Action_Set {
 				'menu_icon'   => 'dashicons-id'
 				));
 
+		register_taxonomy(
+			'people_categories',
+			'people',
+			array(
+				'hierarchical' => true,
+				'label' => 'People Categories',
+				'query_var' => true,
+				'rewrite' => array('slug' => 'people_categories'),
+				'rest_base'          => 'people_categories',
+				'rest_controller_class' => 'WP_REST_Terms_Controller',
+				)
+			);
+		global $wp_taxonomies;
+		$taxonomy_name = 'people_categories';
+		if ( isset( $wp_taxonomies[ $taxonomy_name ] ) ) {
+			$wp_taxonomies[ $taxonomy_name ]->show_in_rest = true;
+			$wp_taxonomies[ $taxonomy_name ]->rest_base = $taxonomy_name;
+			$wp_taxonomies[ $taxonomy_name ]->rest_controller_class = 'WP_REST_Terms_Controller';
+		}		
+
+		//news
 		register_post_type( 'news',
 			array(
 				'labels' => array(
@@ -133,35 +111,31 @@ class WS_Init_Actions extends WS_Action_Set {
 				'show_in_rest'       => true,
 				'rest_base'          => 'news',
 				'rest_controller_class' => 'WP_REST_Posts_Controller',
-				'supports' => array( 'title', 'thumbnail'),
+				'supports' => array( 'title', 'thumbnail', 'editor'),
 				'menu_icon'	=>	'dashicons-welcome-widgets-menus'
 				));
 
-		register_post_type( 'about',
+		register_taxonomy(
+			'news_categories',
+			'news',
 			array(
-				'labels' => array(
-					'name' => 'Info Pages',
-					'singular_name' => 'Info Page',
-					'add_new' => 'Add New',
-					'add_new_item' => 'Add New Info Page',
-					'edit_item' => 'Edit Info Page',
-					'new_item' => 'New Info Page',
-					'all_items' => 'All Info Pages',
-					'view_item' => 'View Info Page',
-					'search_items' => 'Search Info Pages',
-					'not_found' =>  'No Info Pages found',
-					'not_found_in_trash' => 'No Info Pages found in Trash',
-					),
-				'public' => true,
-				'has_archive' => true,
-				'rewrite' => array('slug' => 'about'),
-				'show_in_rest'       => true,
-				'rest_base'          => 'about',
-				'rest_controller_class' => 'WP_REST_Posts_Controller',
-				'supports' => array( 'title', 'thumbnail'),
-				'menu_icon'   => 'dashicons-admin-page'
-				));
+				'hierarchical' => true,
+				'label' => 'News Categories',
+				'query_var' => true,
+				'rewrite' => array('slug' => 'news_categories'),
+				'rest_base'          => 'news_categories',
+				'rest_controller_class' => 'WP_REST_Terms_Controller',
+				)
+			);
+		global $wp_taxonomies;
+		$taxonomy_name = 'news_categories';
+		if ( isset( $wp_taxonomies[ $taxonomy_name ] ) ) {
+			$wp_taxonomies[ $taxonomy_name ]->show_in_rest = true;
+			$wp_taxonomies[ $taxonomy_name ]->rest_base = $taxonomy_name;
+			$wp_taxonomies[ $taxonomy_name ]->rest_controller_class = 'WP_REST_Terms_Controller';
+		}		
 
+		//jobs
 		register_post_type( 'jobs',
 			array(
 				'labels' => array(
@@ -183,7 +157,7 @@ class WS_Init_Actions extends WS_Action_Set {
 				'show_in_rest'       => true,
 				'rest_base'          => 'jobs',
 				'rest_controller_class' => 'WP_REST_Posts_Controller',
-				'supports' => array( 'title'),
+				'supports' => array( 'title', 'thumbnail', 'editor'),
 				'menu_icon'   => 'dashicons-clipboard'
 				));
 
@@ -198,25 +172,11 @@ class WS_Init_Actions extends WS_Action_Set {
 				'position'		=> '50.1',
 				));
 			$option_page = acf_add_options_page(array(
-				'page_title' 	=> 'About Page',
-				'menu_title' 	=> 'About Page',
-				'menu_slug' 	=> 'about-page',
-				'icon_url'      => 'dashicons-index-card',
-				'position'		=> '50.3',
-				));
-			$option_page = acf_add_options_page(array(
-				'page_title' 	=> 'Work Page',
-				'menu_title' 	=> 'Work Page',
-				'menu_slug' 	=> 'work-page',
-				'icon_url'      => 'dashicons-screenoptions',
-				'position'		=> '50.5'
-				));
-			$option_page = acf_add_options_page(array(
-				'page_title' 	=> 'General Information',
-				'menu_title' 	=> 'General Information',
-				'menu_slug' 	=> 'general-information',
+				'page_title' 	=> 'Site Options',
+				'menu_title' 	=> 'Site Options',
+				'menu_slug' 	=> 'site-options',
 				'icon_url'      => 'dashicons-location',
-				'position'		=> '50.7'
+				'position'		=> '50.3'
 				));
 		}
 
