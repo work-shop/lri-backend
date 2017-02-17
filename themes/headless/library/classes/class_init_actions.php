@@ -32,7 +32,7 @@ class WS_Init_Actions extends WS_Action_Set {
 			add_image_size( 'facebook-small', 600, 315, true );	
 			add_image_size( 'facebook', 1200, 630, true );	
 			add_image_size( 'person', 500, 500, true );					
-			add_image_size( 'hero', 1680, 1050, false );
+			add_image_size( 'hero', 1680, 550, true );
 		}
 
 		if ( function_exists( 'add_theme_support' ) ) {
