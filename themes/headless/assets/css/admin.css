@@ -2,14 +2,6 @@
 	display: none !important;
 }
 
-.wp-admin .acf_relationship .relationship_list{
-	/* height: 600px; */
-}
-
-.wp-admin .acf_relationship .relationship_right .relationship_list{
-	/* height: 600px  !important;	 */
-}
-
 .wp-admin #sorter_box{
 	background: none;
 	padding: 0;
@@ -28,3 +20,14 @@
 	padding-bottom: 7px !important;
 }
 
+.acf-field .description{
+	font-size: 12px !important;
+}
+
+h2.hndle{
+	display: none !important;
+}
+
+.acf-postbox .handlediv{
+	display: none !important;
+}
