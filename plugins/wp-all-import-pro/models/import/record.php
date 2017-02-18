@@ -1318,7 +1318,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 				$image_meta_alts_bundle = array();
 				$image_meta_descriptions_bundle = array();
 
-				if ( $this->options['update_all_data'] == 'yes' || $this->options['is_update_images'] ){
+				if ( $this->is_parsing_required('is_update_images') ){
                     foreach ($image_sections as $section) {
                         $chunk == 1 and $logger and call_user_func($logger, __('Composing URLs for ' . strtolower($section['title']) . '...', 'wp_all_import_plugin'));
                         $featured_images = array();
@@ -1662,29 +1662,38 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 						
 						// find corresponding article among previously imported				
 						$logger and call_user_func($logger, sprintf(__('Find corresponding article among previously imported for post `%s`...', 'wp_all_import_plugin'), $articleData['post_title']));
-						$postRecord->clear();
-						$postRecord->getBy(array(
-							'unique_key' => $unique_keys[$i],
-							'import_id' => $this->id,
-						));						
-
-						if ( ! $postRecord->isEmpty() ) {
-							$logger and call_user_func($logger, sprintf(__('Duplicate post was found for post %s with unique key `%s`...', 'wp_all_import_plugin'), $articleData['post_title'], $unique_keys[$i]));
-                            switch ($this->options['custom_type']){
-                                case 'import_users':
-                                    $post_to_update = get_user_by('id', $post_to_update_id = $postRecord->post_id);
-                                    break;
-                                case 'taxonomies':
-                                    $post_to_update = get_term_by('id', $post_to_update_id = $postRecord->post_id, $this->options['taxonomy_type']);
-                                    break;
-                                default:
-                                    $post_to_update = get_post($post_to_update_id = $postRecord->post_id);
-                                    break;
+                        $postList = new PMXI_Post_List();
+                        $args = array(
+                            'unique_key' => $unique_keys[$i],
+                            'import_id' => $this->id,
+                        );
+                        $postRecord->clear();
+                        foreach($postList->getBy($args)->convertRecords() as $postRecord) {
+                            if ( ! $postRecord->isEmpty() ) {
+                                switch ($this->options['custom_type']){
+                                    case 'import_users':
+                                        $post_to_update = get_user_by('id', $post_to_update_id = $postRecord->post_id);
+                                        break;
+                                    case 'taxonomies':
+                                        $post_to_update = get_term_by('id', $post_to_update_id = $postRecord->post_id, $this->options['taxonomy_type']);
+                                        break;
+                                    default:
+                                        $post_to_update = get_post($post_to_update_id = $postRecord->post_id);
+                                        break;
+                                }
                             }
-						}
-						else{
-							$logger and call_user_func($logger, sprintf(__('Duplicate post wasn\'t found with unique key `%s`...', 'wp_all_import_plugin'), $unique_keys[$i]));
-						}
+                            if ($post_to_update){
+                                $logger and call_user_func($logger, sprintf(__('Duplicate post was found for post %s with unique key `%s`...', 'wp_all_import_plugin'), $articleData['post_title'], $unique_keys[$i]));
+                                break;
+                            }
+                            else{
+                                $postRecord->delete();
+                            }
+                        }
+
+                        if (empty($post_to_update)) {
+                            $logger and call_user_func($logger, sprintf(__('Duplicate post wasn\'t found with unique key `%s`...', 'wp_all_import_plugin'), $unique_keys[$i]));
+                        }
 																	
 					// if Manual Matching re-import option seleted
 					} else {
@@ -1914,6 +1923,9 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                 if ( ! $this->options['is_update_author']){
                                     $articleData['post_author'] = $post_to_update->post_author;
                                     $logger and call_user_func($logger, sprintf(__('Preserve post author of already existing article for `%s`', 'wp_all_import_plugin'), $articleData['post_title']));
+                                }
+                                if ( ! wp_all_import_is_update_cf('_wp_page_template', $this->options) ){
+                                    $articleData['page_template'] = get_post_meta($post_to_update_id, '_wp_page_template', true);
                                 }
                                 break;
                         }
@@ -3244,8 +3256,10 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 
 					// fire important hooks after custom fields are added
 					if ( ! $this->options['is_fast_mode'] and ! in_array($this->options['custom_type'], array('import_users', 'taxonomies'))){
-                        $post_object = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT * FROM {$this->wpdb->posts} WHERE ID = %d", $pid) );
-						do_action( "save_post_" . $articleData['post_type'], $pid, $post_object, $is_update );
+                        $_post = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT * FROM {$this->wpdb->posts} WHERE ID = %d LIMIT 1", $pid ) );
+                        $_post = sanitize_post( $_post, 'raw' );
+                        $post_object = new WP_Post( $_post );
+                        do_action( "save_post_" . $articleData['post_type'], $pid, $post_object, $is_update );
 						do_action( 'save_post', $pid, $post_object, $is_update );
 						do_action( 'wp_insert_post', $pid, $post_object, $is_update );
 					}

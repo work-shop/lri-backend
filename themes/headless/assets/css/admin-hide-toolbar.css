@@ -1,0 +1,12 @@
+
+#wpadminbar{
+	display: none !important;
+}
+
+#wpcontent{
+	margin-top: -30px !important;
+}
+
+#screen-meta-links{
+	display: none !important;
+}

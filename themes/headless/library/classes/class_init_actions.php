@@ -178,16 +178,7 @@ class WS_Init_Actions extends WS_Action_Set {
 				'icon_url'      => 'dashicons-location',
 				'position'		=> '50.3'
 				));
-		}
-
-
-		$theme_dir = get_template_directory_uri();
-
-  		//Ocean
-		wp_admin_css_color( 'ocean', __( 'blowcean' ),
-			$theme_dir . '/admin-colors/ocean/colors.min.css',
-			array( '#aa9d88', '#9ebaa0', '#738e96', '#f2fcff' )
-		);		
+		}	
 
 	}
 
@@ -197,8 +188,17 @@ class WS_Init_Actions extends WS_Action_Set {
 	}
 
 	/** ADMIN DASHBOARD ASSETS */
-	public function login_css() { wp_enqueue_style( 'login_css', get_template_directory_uri() . '/assets/css/login.css' ); }
-	public function admin_css() { wp_enqueue_style( 'admin_css', get_template_directory_uri() . '/assets/css/admin.css' ); }
+	public function login_css() { 
+		wp_enqueue_style( 'login_css', get_template_directory_uri() . '/assets/css/login.css' ); }
+
+	public function admin_css() { 
+		if( current_user_can( 'update_core' ) ){
+			wp_enqueue_style( 'admin_hide_toolbar', get_template_directory_uri() . '/assets/css/admin-hide-toolbar.css' ); 
+		} else{
+			wp_enqueue_style( 'admin_hide_update_nag', get_template_directory_uri() . '/assets/css/admin-hide-update-nag.css' ); 
+		}
+		wp_enqueue_style( 'admin_css', get_template_directory_uri() . '/assets/css/admin.css' ); 
+	}
 
 
 

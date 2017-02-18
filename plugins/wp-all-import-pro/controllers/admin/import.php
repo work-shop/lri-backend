@@ -1712,7 +1712,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 
                 // Get all meta keys for requested post type
                 $this->data['meta_keys'] = array();
-                $hide_fields = array('_wp_page_template', '_edit_lock', '_edit_last', '_wp_trash_meta_status', '_wp_trash_meta_time');
+                $hide_fields = array('_edit_lock', '_edit_last', '_wp_trash_meta_status', '_wp_trash_meta_time');
                 $records = get_posts( array('post_type' => $post['custom_type']) );
                 if ( ! empty($records)){
                     foreach ($records as $record) {
@@ -2285,7 +2285,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
                 global $wpdb;
 
                 // Get all meta keys for requested post type
-                $hide_fields = array('_wp_page_template', '_edit_lock', '_edit_last', '_wp_trash_meta_status', '_wp_trash_meta_time');
+                $hide_fields = array('_edit_lock', '_edit_last', '_wp_trash_meta_status', '_wp_trash_meta_time');
                 $records = get_posts( array('post_type' => $post['custom_type']) );
                 if ( ! empty($records)){
                     foreach ($records as $record) {
