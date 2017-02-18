@@ -24,6 +24,10 @@
 	font-size: 12px !important;
 }
 
+#post-body-content .acf-postbox{
+	margin-top: 40px !important;
+}
+
 h2.hndle{
 	display: none !important;
 }
