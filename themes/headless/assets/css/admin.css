@@ -35,3 +35,8 @@ h2.hndle{
 .acf-postbox .handlediv{
 	display: none !important;
 }
+
+#tinymce{
+	font-family: sans-serif !important;
+}
+
