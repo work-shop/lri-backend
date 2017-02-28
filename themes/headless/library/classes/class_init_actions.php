@@ -29,13 +29,11 @@ class WS_Init_Actions extends WS_Action_Set {
 			add_image_size( 'md', 900, 900, false );	
 			add_image_size( 'lg', 1200, 1200, false );
 			add_image_size( 'xl', 1920, 1920, false );	
-			add_image_size( 'facebook-small', 600, 315, true );	
+			add_image_size( 'facebook_small', 600, 315, true );	
 			add_image_size( 'facebook', 1200, 630, true );	
 			add_image_size( 'person', 500, 500, true );					
-			add_image_size( 'hero-small', 560, 162, true );
-			add_image_size( 'hero', 1680, 450, true );
-			add_image_size( 'hero-tall', 1680, 550, true );
-
+			add_image_size( 'hero_small', 560, 179, true );
+			add_image_size( 'hero', 1680, 550, true );
 		}
 
 		if ( function_exists( 'add_theme_support' ) ) {
