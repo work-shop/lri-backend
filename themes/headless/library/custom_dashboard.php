@@ -33,4 +33,3 @@ $url = admin_url();
 	</div> -->
 
 </div>
-<?php include( ABSPATH . 'wp-admin/admin-footer.php' );
