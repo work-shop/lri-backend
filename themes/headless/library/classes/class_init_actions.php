@@ -14,7 +14,8 @@ class WS_Init_Actions extends WS_Action_Set {
 				'after_theme_setup'		=> array( 'remove_post_formats', 11, 0 ),
 				'login_head'			=> 'login_css',
 				'admin_head'			=> 'admin_css',
-				'admin_menu'			=> 'all_settings_link'
+				'admin_menu'			=> 'all_settings_link',
+                'admin_init'            => 'admin_setup'
 				));
 	}
 
@@ -26,15 +27,15 @@ class WS_Init_Actions extends WS_Action_Set {
 		if ( function_exists( 'add_image_size' ) ) {
 			add_image_size( 'xs', 300, 300, false );
 			add_image_size( 'sm', 600, 600, false );
-			add_image_size( 'md', 900, 900, false );	
+			add_image_size( 'md', 900, 900, false );
 			add_image_size( 'lg', 1200, 1200, false );
-			add_image_size( 'xl', 1920, 1920, false );	
-			add_image_size( 'facebook_small', 600, 315, true );	
-			add_image_size( 'facebook', 1200, 630, true );	
-			add_image_size( 'person', 500, 500, true );					
+			add_image_size( 'xl', 1920, 1920, false );
+			add_image_size( 'facebook_small', 600, 315, true );
+			add_image_size( 'facebook', 1200, 630, true );
+			add_image_size( 'person', 500, 500, true );
 			add_image_size( 'hero_small', 560, 179, true );
 			add_image_size( 'hero', 1680, 550, true );
-			
+
 		}
 
 		if ( function_exists( 'add_theme_support' ) ) {
@@ -89,7 +90,7 @@ class WS_Init_Actions extends WS_Action_Set {
 			$wp_taxonomies[ $taxonomy_name ]->show_in_rest = true;
 			$wp_taxonomies[ $taxonomy_name ]->rest_base = $taxonomy_name;
 			$wp_taxonomies[ $taxonomy_name ]->rest_controller_class = 'WP_REST_Terms_Controller';
-		}		
+		}
 
 		//news
 		register_post_type( 'news',
@@ -135,7 +136,7 @@ class WS_Init_Actions extends WS_Action_Set {
 			$wp_taxonomies[ $taxonomy_name ]->show_in_rest = true;
 			$wp_taxonomies[ $taxonomy_name ]->rest_base = $taxonomy_name;
 			$wp_taxonomies[ $taxonomy_name ]->rest_controller_class = 'WP_REST_Terms_Controller';
-		}		
+		}
 
 		//jobs
 		register_post_type( 'jobs',
@@ -180,7 +181,7 @@ class WS_Init_Actions extends WS_Action_Set {
 				'icon_url'      => 'dashicons-location',
 				'position'		=> '50.3'
 				));
-		}	
+		}
 
 	}
 
@@ -190,20 +191,53 @@ class WS_Init_Actions extends WS_Action_Set {
 	}
 
 	/** ADMIN DASHBOARD ASSETS */
-	public function login_css() { 
+	public function login_css() {
 		wp_enqueue_style( 'login_css', get_template_directory_uri() . '/assets/css/login.css' ); }
 
-	public function admin_css() { 
+	public function admin_css() {
 		if( current_user_can( 'update_core' ) ){
-			wp_enqueue_style( 'admin_hide_toolbar', get_template_directory_uri() . '/assets/css/admin-hide-toolbar.css' ); 
+			wp_enqueue_style( 'admin_hide_toolbar', get_template_directory_uri() . '/assets/css/admin-hide-toolbar.css' );
 
 			//GET RID OF THIS LATER!!!!!
-			wp_enqueue_style( 'admin_hide_update_nag', get_template_directory_uri() . '/assets/css/admin-hide-update-nag.css' ); 
+			wp_enqueue_style( 'admin_hide_update_nag', get_template_directory_uri() . '/assets/css/admin-hide-update-nag.css' );
 		} else{
-			wp_enqueue_style( 'admin_hide_update_nag', get_template_directory_uri() . '/assets/css/admin-hide-update-nag.css' ); 
+			wp_enqueue_style( 'admin_hide_update_nag', get_template_directory_uri() . '/assets/css/admin-hide-update-nag.css' );
 		}
-		wp_enqueue_style( 'admin_css', get_template_directory_uri() . '/assets/css/admin.css' ); 
+		wp_enqueue_style( 'admin_css', get_template_directory_uri() . '/assets/css/admin.css' );
 	}
+
+    /**
+     * Admin setup registers additional settings on the global options page for us.
+     *
+     * TODO: Need to update the `register_setting` function to take an array in the third parameter – once we're able to update to 4.7.3
+     * That API is not available in 4.6.3
+     */
+    public function admin_setup() {
+        register_setting(
+            'general',
+            'cdn_url'
+        );
+
+        add_settings_field(
+            'cdn_url',
+            'CDN Address (URL)',
+            array( $this, 'render_settings_field' ),
+            'general',
+            'default',
+            array( 'cdn_url', get_option('cdn_url') )
+        );
+    }
+
+    /**
+     * Callback function to render the CDN URL field in the options.
+     *
+     * @param $args array the array of value arguments
+     *
+     */
+    public function render_settings_field( $args ) {
+        echo "<input aria-describedby='cdn-description' name='cdn_url' class='regular-text code' type='text' id='" . $args[0] . "' value='" . $args[1] . "'/>";
+        echo "<p id='cdn-description' class='description'>Input the url of the CDN to use with this site or leave this field blank to bypass the CDN.";
+    }
 
 
 
