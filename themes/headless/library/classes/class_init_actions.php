@@ -164,31 +164,31 @@ class WS_Init_Actions extends WS_Action_Set {
 				'menu_icon'   => 'dashicons-clipboard'
 				));
 
-		// //form pages
-		// register_post_type( 'form_pages',
-		// 	array(
-		// 		'labels' => array(
-		// 			'name' => 'Form Pages',
-		// 			'singular_name' => 'Form Page',
-		// 			'add_new' => 'Add New',
-		// 			'add_new_item' => 'Add New Form Page',
-		// 			'edit_item' => 'Edit Form Page',
-		// 			'new_item' => 'New Form Page',
-		// 			'all_items' => 'All Form Pages',
-		// 			'view_item' => 'View Form Page',
-		// 			'search_items' => 'Search Form Pages',
-		// 			'not_found' =>  'No Form Pages found',
-		// 			'not_found_in_trash' => 'No Form Pages found in Trash',
-		// 			),
-		// 		'public' => true,
-		// 		'has_archive' => true,
-		// 		'rewrite' => array('slug' => 'formpages'),
-		// 		'show_in_rest'       => true,
-		// 		'rest_base'          => 'formpages',
-		// 		'rest_controller_class' => 'WP_REST_Posts_Controller',
-		// 		'supports' => array( 'title'),
-		// 		'menu_icon'   => 'dashicons-editor-table'
-		// 		));	
+		//form pages
+		register_post_type( 'form_pages',
+			array(
+				'labels' => array(
+					'name' => 'Form Pages',
+					'singular_name' => 'Form Page',
+					'add_new' => 'Add New',
+					'add_new_item' => 'Add New Form Page',
+					'edit_item' => 'Edit Form Page',
+					'new_item' => 'New Form Page',
+					'all_items' => 'All Form Pages',
+					'view_item' => 'View Form Page',
+					'search_items' => 'Search Form Pages',
+					'not_found' =>  'No Form Pages found',
+					'not_found_in_trash' => 'No Form Pages found in Trash',
+					),
+				'public' => true,
+				'has_archive' => true,
+				'rewrite' => array('slug' => 'formpages'),
+				'show_in_rest'       => true,
+				'rest_base'          => 'formpages',
+				'rest_controller_class' => 'WP_REST_Posts_Controller',
+				'supports' => array( 'title'),
+				'menu_icon'   => 'dashicons-editor-table'
+				));	
 
 		// //newsletter
 		// register_post_type( 'newsletters',
