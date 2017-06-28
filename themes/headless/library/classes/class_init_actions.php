@@ -15,7 +15,7 @@ class WS_Init_Actions extends WS_Action_Set {
 				'login_head'			=> 'login_css',
 				'admin_head'			=> 'admin_css',
 				'admin_menu'			=> 'all_settings_link',
-                'admin_init'            => 'admin_setup'
+				'admin_init'            => 'admin_setup'
 				));
 	}
 
@@ -164,6 +164,58 @@ class WS_Init_Actions extends WS_Action_Set {
 				'menu_icon'   => 'dashicons-clipboard'
 				));
 
+		//form pages
+		register_post_type( 'form_pages',
+			array(
+				'labels' => array(
+					'name' => 'Form Pages',
+					'singular_name' => 'Form Page',
+					'add_new' => 'Add New',
+					'add_new_item' => 'Add New Form Page',
+					'edit_item' => 'Edit Form Page',
+					'new_item' => 'New Form Page',
+					'all_items' => 'All Form Pages',
+					'view_item' => 'View Form Page',
+					'search_items' => 'Search Form Pages',
+					'not_found' =>  'No Form Pages found',
+					'not_found_in_trash' => 'No Form Pages found in Trash',
+					),
+				'public' => true,
+				'has_archive' => true,
+				'rewrite' => array('slug' => 'formpages'),
+				'show_in_rest'       => true,
+				'rest_base'          => 'formpages',
+				'rest_controller_class' => 'WP_REST_Posts_Controller',
+				'supports' => array( 'title'),
+				'menu_icon'   => 'dashicons-editor-table'
+				));	
+
+		//newsletter
+		register_post_type( 'newsletters',
+			array(
+				'labels' => array(
+					'name' => 'Newsletters',
+					'singular_name' => 'Newsletter',
+					'add_new' => 'Add New',
+					'add_new_item' => 'Add New Newsletter',
+					'edit_item' => 'Edit Newsletter',
+					'new_item' => 'New Newsletter',
+					'all_items' => 'All Newsletters',
+					'view_item' => 'View Newsletter',
+					'search_items' => 'Search Newsletters',
+					'not_found' =>  'No Newsletters found',
+					'not_found_in_trash' => 'No Newsletters found in Trash',
+					),
+				'public' => true,
+				'has_archive' => true,
+				'rewrite' => array('slug' => 'newsletters'),
+				'show_in_rest'       => true,
+				'rest_base'          => 'newsletters',
+				'rest_controller_class' => 'WP_REST_Posts_Controller',
+				'supports' => array( 'title'),
+				'menu_icon'   => 'dashicons-images-alt2'
+				));						
+
 		//add ACF options pages
 		//optional - include a custom icon, list of icons available at https://developer.wordpress.org/resource/dashicons/
 		if( function_exists('acf_add_options_page') ) {
@@ -194,17 +246,17 @@ class WS_Init_Actions extends WS_Action_Set {
 	public function login_css() {
 		wp_enqueue_style( 'login_css', get_template_directory_uri() . '/assets/css/login.css' ); }
 
-	public function admin_css() {
-		if( current_user_can( 'update_core' ) ){
-			wp_enqueue_style( 'admin_hide_toolbar', get_template_directory_uri() . '/assets/css/admin-hide-toolbar.css' );
+		public function admin_css() {
+			if( current_user_can( 'update_core' ) ){
+				wp_enqueue_style( 'admin_hide_toolbar', get_template_directory_uri() . '/assets/css/admin-hide-toolbar.css' );
 
 			//GET RID OF THIS LATER!!!!!
-			wp_enqueue_style( 'admin_hide_update_nag', get_template_directory_uri() . '/assets/css/admin-hide-update-nag.css' );
-		} else{
-			wp_enqueue_style( 'admin_hide_update_nag', get_template_directory_uri() . '/assets/css/admin-hide-update-nag.css' );
+				wp_enqueue_style( 'admin_hide_update_nag', get_template_directory_uri() . '/assets/css/admin-hide-update-nag.css' );
+			} else{
+				wp_enqueue_style( 'admin_hide_update_nag', get_template_directory_uri() . '/assets/css/admin-hide-update-nag.css' );
+			}
+			wp_enqueue_style( 'admin_css', get_template_directory_uri() . '/assets/css/admin.css' );
 		}
-		wp_enqueue_style( 'admin_css', get_template_directory_uri() . '/assets/css/admin.css' );
-	}
 
     /**
      * Admin setup registers additional settings on the global options page for us.
@@ -213,19 +265,19 @@ class WS_Init_Actions extends WS_Action_Set {
      * That API is not available in 4.6.3
      */
     public function admin_setup() {
-        register_setting(
-            'general',
-            'cdn_url'
-        );
+    	register_setting(
+    		'general',
+    		'cdn_url'
+    		);
 
-        add_settings_field(
-            'cdn_url',
-            'CDN Address (URL)',
-            array( $this, 'render_settings_field' ),
-            'general',
-            'default',
-            array( 'cdn_url', get_option('cdn_url') )
-        );
+    	add_settings_field(
+    		'cdn_url',
+    		'CDN Address (URL)',
+    		array( $this, 'render_settings_field' ),
+    		'general',
+    		'default',
+    		array( 'cdn_url', get_option('cdn_url') )
+    		);
     }
 
     /**
@@ -235,8 +287,8 @@ class WS_Init_Actions extends WS_Action_Set {
      *
      */
     public function render_settings_field( $args ) {
-        echo "<input aria-describedby='cdn-description' name='cdn_url' class='regular-text code' type='text' id='" . $args[0] . "' value='" . $args[1] . "'/>";
-        echo "<p id='cdn-description' class='description'>Input the url of the CDN to use with this site or leave this field blank to bypass the CDN.";
+    	echo "<input aria-describedby='cdn-description' name='cdn_url' class='regular-text code' type='text' id='" . $args[0] . "' value='" . $args[1] . "'/>";
+    	echo "<p id='cdn-description' class='description'>Input the url of the CDN to use with this site or leave this field blank to bypass the CDN.";
     }
 
 
