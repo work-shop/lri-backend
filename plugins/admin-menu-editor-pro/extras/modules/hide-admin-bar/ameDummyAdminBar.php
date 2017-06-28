@@ -5,7 +5,7 @@ if ( class_exists('WP_Admin_bar') ) {
 		public function render() {
 			//Set up internal data structures in case some plugin wants to use them.
 			$this->_bind();
-			//Don't actually rendee anything.
+			//Don't actually render anything.
 		}
 	}
 

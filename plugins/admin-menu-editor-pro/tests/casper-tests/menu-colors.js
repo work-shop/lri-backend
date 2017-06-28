@@ -1,6 +1,10 @@
 casper.start();
 
-ameTest.thenQuickSetup();
+ameTest.thenQuickSetup(['config-manipulator']);
+
+//Turn off the highlight-new-menus module for this test. The highlights override menu color settings.
+ameTest.toggleModule('highlight-new-menus', false);
+ameTest.thenOpenMenuEditor();
 
 casper.then(function() {
 	casper.test.comment('Change the background color of the "Posts" menu.');

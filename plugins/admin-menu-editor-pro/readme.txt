@@ -3,8 +3,8 @@ Contributors: whiteshadow
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=A6P9S6CE3SRSW
 Tags: admin, dashboard, menu, security, wpmu
 Requires at least: 4.1
-Tested up to: 4.7.1
-Stable tag: 2.4.3
+Tested up to: 4.8
+Stable tag: 2.5.1
 
 Lets you directly edit the WordPress admin menu. You can re-order, hide or rename existing menus, add custom menus and more.
 
@@ -84,6 +84,34 @@ Here are some usage tips and other things that can be good to know when using th
 
 [Get the latest version here.](http://adminmenueditor.com/updates/)
 
+= 2.5.1 =
+##### Fixed
+* Fixed a WP-CLI compatibility issue where some CLI commands would fail with a fatal error: "Call to a member function check_current_user_access() on null".
+* Fixed a couple of UI layout issues that affected RTL sites.
+* Fixed a conflict with WP Nag Hide that prevented the "Open in": "New window" setting from working.
+* Fixed an oversight that could cause a fatal error if a theme or plugin was using magic methods (i.e. __call and __callStatic) for hook callbacks.
+* Fixed a CSS issue where, when changing the menu icon, certain Dashicons wouldn't properly replace the original icon.
+
+= 2.5 =
+##### Added
+* You can edit plugin names and descriptions through the "Plugins" tab. This only changes how plugins are displayed on the "Plugins" page. It doesn't affect plugin files on disk.
+* Added "Meta Boxes" tab. It lets you hide meta boxes and custom fields from roles and users. 
+* Added an option to highlight new menu items. This feature is off by default. You can enable it in the "Settings" tab.
+* Added an option to compress menu data that the plugin stores in the database. This significantly reduces the size of the relevant database entries, but it also adds some decompression overhead to every admin page load. You can enable this feature in the "Settings" tab.
+
+##### Fixed
+* Added a compatibility workaround for the Divi Training plugin. The hidden menu items that it adds to the "Dashboard" menu should no longer show up when you activate AME.
+* Added a workaround that improves compatibility with plugins that set their menu icons using CSS. Previously, there were situations where users were not able to change menu icons because the plugin that created the menu item used CSS to override the normal icon. AME now adds an extra stylesheet that overrides icons with !important.
+* Fixed an old bug where sorting menu items would put all separators at the top. Now they'll stay near their preceding menu item.
+* Fixed incorrect shadows on custom screen options links.
+* Fixed a couple of UI layout issues that were caused by bugs in other plugins.
+* Fixed a rare issue where hiding the admin bar would leave behind empty space.
+
+##### Changed
+* Minor performance optimizations.
+* When you use the "A-Z" button to sort top level menus, it also sorts submenu items. To avoid compatibility issues, the first item of each submenu stays in its original position.
+* Automatically reset plugin access if the only allowed user no longer exists. This should cut down on the number of users who accidentally lock themselves out by setting "Who can access the plugin" to "Only the current user" and then later deleting that user account.
+
 = 2.4.3 =
 * Added a workaround for WooCommerce 2.6.8 to display the number of new orders in the "Orders" menu title.
 * Tested with WP 4.7 and 4.8-alpha.
@@ -106,7 +134,7 @@ Here are some usage tips and other things that can be good to know when using th
 
 = 2.4 (2016-08-15) =
 * Added Font Awesome icons.
-* Added a "Users" tab that lets you hide individual users. Hidden users don't show up on the "All Users" page and they can't be edited or deleted by normal users. However, they can still show up in other parts of the WP admin (e.g. as post authors), and their content is not specially protected. 
+* Added a "Users" tab that lets you hide individual users. Hidden users don't show up on the "All Users" page and they can't be edited or deleted by normal users. However, they can still show up in other parts of the WP admin (e.g. as post authors), and their content is not specially protected.
 * Added more detailed permission error messages. You can turn them off in the "Settings" tab by changing "Error verbosity level" to "Low".
 * Fixed the "Cancel" button in the "Select Visible Users" dialog not working when the "Plugins" tab is open.
 * Tested up to WP 4.6.
@@ -119,7 +147,7 @@ Here are some usage tips and other things that can be good to know when using th
 * Fixed the role/user list in the "Permissions" popup. Now it should show all selected users, not just the current user.
 * Fixed wp-cli integration.
 
-= 2.2.3 (2016-05-22) = 
+= 2.2.3 (2016-05-22) =
 * Fixed a bug where selecting a role and then creating a new menu item could render most of the admin menu inaccessible to all other roles. This bug was introduced in version 2.2.2.
 
 = 2.2.2 (2016-05-11) =

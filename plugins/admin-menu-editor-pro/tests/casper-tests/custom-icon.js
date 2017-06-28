@@ -96,6 +96,7 @@ casper.then(function() {
 	casper.click('.ws_menu.ws_active .ws_select_icon');
 
 	//Select the "Heart" icon.
+	casper.click('#ws_icon_selector .ws_tool_tab_nav li:nth-child(2) a'); //Select the "Font Awesome" tab.
 	casper.click('#ws_icon_selector .ws_icon_option[data-icon-url="ame-fa-heart"]');
 
 	casper.click('#ws_save_menu');

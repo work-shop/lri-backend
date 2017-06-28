@@ -68,9 +68,9 @@ class wsMenuEditorExtras {
 		}
 		
 		//Output the menu-modification JS after the menu has been generated.
-		//'admin_notices' is, AFAIK, the action that fires the soonest after menu
+		//'in_admin_header' is, AFAIK, the action that fires the soonest after menu
 		//output has been completed, so we use that.
-		add_action('admin_notices', array($this, 'fix_flagged_menus'));
+		add_action('in_admin_header', array($this, 'fix_flagged_menus'));
 
 		//Import/export settings
 		$this->export_settings = array(
@@ -135,18 +135,6 @@ class wsMenuEditorExtras {
 		add_filter('custom_admin_menu', array($this, 'add_menu_fa_icon'), 10, 1);
 		add_filter('admin_menu_editor-icon_selector_tabs', array($this, 'add_fa_selector_tab'), 10, 1);
 		add_action('admin_menu_editor-icon_selector', array($this, 'output_fa_selector_tab'));
-
-		/**
-		 * Modules.
-		 */
-		include dirname(__FILE__) . '/extras/modules/visible-users/visible-users.php';
-		new ameVisibleUsers($this->wp_menu_editor);
-
-		include dirname(__FILE__) . '/extras/modules/hide-admin-bar/hide-admin-bar.php';
-		new ameAdminBarHider($this->wp_menu_editor, $this);
-
-		include dirname(__FILE__) . '/extras/modules/hide-admin-menu/hide-admin-menu.php';
-		new ameAdminMenuHider($this->wp_menu_editor, $this);
 
 		//License management
 		add_filter('wslm_license_ui_title-admin-menu-editor-pro', array($this, 'license_ui_title'), 10, 0);
@@ -724,7 +712,8 @@ wsEditorData.importMenuNonce = "<?php echo esc_js(wp_create_nonce('import_custom
 		$export['total']++; //Export counter. Could be used to make download URLs unique.
 
 		//Compress menu data to make export files smaller.
-		$menu_data = wp_unslash($_POST['data']); //WordPress simulates magic quotes, so we must strip slashes.
+		$post = $this->wp_menu_editor->get_post_params();
+		$menu_data = $post['data'];
 		$menu = ameMenu::load_json($menu_data);
 		$menu_data = ameMenu::to_json(ameMenu::compress($menu));
 
@@ -1303,6 +1292,7 @@ wsEditorData.importMenuNonce = "<?php echo esc_js(wp_create_nonce('import_custom
 		}
 
 		//The extra capability is an optional filter that's applied on top of other settings.
+		//TODO: Check extra cap even if there are user-specific permissions or they are a Super Admin.
 		if ( isset($extra_cap) && $has_access ) {
 			$this->disable_virtual_caps = true;
 			if ( isset($this->cached_user_caps[$extra_cap]) ) {
@@ -1886,6 +1876,7 @@ wsEditorData.importMenuNonce = "<?php echo esc_js(wp_create_nonce('import_custom
 
 if ( isset($wp_menu_editor) && !defined('WP_UNINSTALL_PLUGIN') ) {
 	//Initialize extras
+	global $wsMenuEditorExtras;
 	$wsMenuEditorExtras = new wsMenuEditorExtras($wp_menu_editor);
 }
 
@@ -1894,7 +1885,7 @@ if ( !defined('IS_DEMO_MODE') && !defined('IS_MASTER_MODE') ) {
 //Load the custom update checker (requires PHP 5)
 if ( (version_compare(PHP_VERSION, '5.0.0', '>=')) && isset($wp_menu_editor) ){
 	require dirname(__FILE__) . '/plugin-updates/plugin-update-checker.php';
-	$ameProUpdateChecker = PucFactory::buildUpdateChecker(
+	$ameProUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
 		'http://adminmenueditor.com/?get_metadata_for=admin-menu-editor-pro',
 		$wp_menu_editor->plugin_file, //Note: This variable is set in the framework constructor
 		'admin-menu-editor-pro',

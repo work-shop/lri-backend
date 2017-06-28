@@ -10,9 +10,8 @@ class ameAdminMenuHider {
 	 */
 	private $extras;
 
-	public function __construct($menuEditor, $extras) {
+	public function __construct($menuEditor) {
 		$this->menuEditor = $menuEditor;
-		$this->extras = $extras;
 
 		add_action('init', array($this, 'maybe_hide_admin_menu'));
 		add_filter('admin_menu_editor-show_general_box', '__return_true');
@@ -20,6 +19,8 @@ class ameAdminMenuHider {
 	}
 
 	public function maybe_hide_admin_menu() {
+		$this->extras = $GLOBALS['wsMenuEditorExtras'];
+
 		if ( $this->should_hide_admin_menu() ) {
 			$this->hide_admin_menu();
 		}

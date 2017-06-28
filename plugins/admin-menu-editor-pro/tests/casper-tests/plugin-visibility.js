@@ -253,6 +253,56 @@ casper.thenOpen(ameTestConfig.adminUrl + '/?ame_delete_users=new_user,plugman,do
 //Delete test role.
 casper.thenOpen(ameTestConfig.adminUrl + '/?ame_delete_roles=plugin_manager');
 
+//Rename one of the custom plugins.
+ameTest.resetPluginConfiguration();
+ameTest.thenLoginAsAdmin();
+
+thenOpenPluginVisibility(function() {
+	var pluginFile = 'dummy-plugin-a/dummy-plugin.php',
+		customName = 'Custom Plugin Name',
+		customDescription = 'Custom plugin description.';
+
+	casper.test.comment("Change plugin name and description.");
+
+	var success = casper.evaluate(function (fileName, name, description) {
+		var row = jQuery('table.plugins input[data-plugin-file="' + fileName + '"]').closest('tr');
+		row.find('.row-actions .edit a').click();
+
+		var inlineEditor = row.next('.inline-edit-row');
+		if (inlineEditor.length < 1) {
+			return false;
+		}
+
+		inlineEditor.find('.ame-pv-custom-name').val(name).change();
+		inlineEditor.find('.ame-pv-custom-description').val(description).change();
+		inlineEditor.find('.button-primary').click();
+
+		return true;
+	}, pluginFile, customName, customDescription);
+
+	if (!success) {
+		casper.test.fail('Failed to change plugin name and description.');
+	}
+
+	casper.click('.ame-pv-save-form .button-primary');
+});
+
+casper.waitForSelector('#setting-error-settings_updated');
+
+casper.thenOpen(pluginsPageUrl, function() {
+	casper.test.assertSelectorHasText(
+		'.plugins tr[data-plugin="dummy-plugin-a/dummy-plugin.php"] .plugin-title strong',
+		'Custom Plugin Name',
+		'You can change the plugin name.'
+	);
+
+	casper.test.assertSelectorHasText(
+		'.plugins tr[data-plugin="dummy-plugin-a/dummy-plugin.php"] .plugin-description',
+		'Custom plugin description.',
+		'You can change the plugin description.'
+	);
+});
+
 casper.run(function() {
 	this.test.done();
 });

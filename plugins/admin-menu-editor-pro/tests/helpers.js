@@ -165,11 +165,11 @@ var ameTest = {
 						.closest('.ws_container');
 					selected = selected && (itemNode.click().length > 0);
 
-					if ( selected && expand && !itemNode.find('.ws_edit_link').hasClass('.ws_edit_link_expanded') ) {
+					if ( selected && expand && !itemNode.find('.ws_edit_link').hasClass('ws_edit_link_expanded') ) {
 						itemNode.find('.ws_edit_link').click();
 					}
 				} else {
-					if ( selected && expand && !menuNode.find('.ws_edit_link').hasClass('.ws_edit_link_expanded') ) {
+					if ( selected && expand && !menuNode.find('.ws_edit_link').hasClass('ws_edit_link_expanded') ) {
 						menuNode.find('.ws_edit_link').click();
 					}
 				}
@@ -326,6 +326,18 @@ var ameTest = {
 		});
 
 		casper.waitWhileVisible('#ws_visible_users_dialog');
+	},
+
+	toggleModule: function(moduleId, active) {
+		var url = ameTestConfig.adminUrl + '?ame_toggle_module=' + moduleId + '&ame_active=' + (active ? '1' : '0');
+		casper.thenOpen(url,
+			function() {
+				casper.log(
+					'Module "' + moduleId + '" state changed: ' + (active ? 'active' : 'inactive'),
+					'info'
+				);
+			}
+		);
 	}
 };
 

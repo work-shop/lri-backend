@@ -77,9 +77,9 @@ var AmeSuperUsers = (function () {
     AmeSuperUsers.prototype.toggleInfoBox = function () {
         this.isInfoBoxOpen(!this.isInfoBoxOpen());
     };
-    AmeSuperUsers._ = wsAmeLodash;
     return AmeSuperUsers;
 }());
+AmeSuperUsers._ = wsAmeLodash;
 jQuery(function () {
     var superUserVM = new AmeSuperUsers(wsAmeSuperUserSettings);
     ko.applyBindings(superUserVM, document.getElementById('ame-super-user-settings'));

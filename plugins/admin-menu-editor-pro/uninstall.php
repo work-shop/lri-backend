@@ -25,6 +25,18 @@ if( defined( 'ABSPATH') && defined('WP_UNINSTALL_PLUGIN') ) {
         delete_metadata('user', 0, 'ame_show_hints', '', true);
     }
 
+    //Remove meta box settings.
+	delete_option('ws_ame_meta_boxes');
+	if ( function_exists('delete_site_option') ) {
+		delete_site_option('ws_ame_meta_boxes');
+	}
+
+	//Call the uninstaller for the "highlight new menus" module.
+	$highlighterUninstaller = dirname(__FILE__) . '/modules/highlight-new-menus/uninstall.php';
+	if ( file_exists($highlighterUninstaller) ) {
+		include (dirname(__FILE__) . '/modules/highlight-new-menus/uninstall.php');
+	}
+
 	//Remove license data (if any).
 	if ( file_exists(dirname(__FILE__) . '/extras.php') ) {
 		require_once dirname(__FILE__) . '/extras.php';

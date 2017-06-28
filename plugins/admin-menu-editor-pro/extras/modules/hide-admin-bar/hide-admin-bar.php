@@ -13,9 +13,8 @@ class ameAdminBarHider {
 	 */
 	private $extras;
 
-	public function __construct($menuEditor, $extras) {
+	public function __construct($menuEditor) {
 		$this->menuEditor = $menuEditor;
-		$this->extras = $extras;
 
 		add_action('init', array($this, 'maybe_hide_admin_bar'));
 		add_filter('admin_menu_editor-show_general_box', '__return_true');
@@ -23,6 +22,8 @@ class ameAdminBarHider {
 	}
 
 	public function maybe_hide_admin_bar() {
+		$this->extras = $GLOBALS['wsMenuEditorExtras'];
+
 		if ( $this->should_hide_admin_bar() ) {
 			$this->hide_admin_bar();
 		}
@@ -51,6 +52,7 @@ class ameAdminBarHider {
 		add_action('in_admin_header', array($this, 'remove_admin_bar_css_classes'));
 		add_filter('wp_admin_bar_class', array($this, 'filter_admin_bar_class'));
 		add_action('admin_print_scripts-profile.php', array($this, 'hide_toolbar_settings'));
+		add_action('admin_bar_init', array($this, 'remove_bump_css'));
 	}
 
 	/**
@@ -93,6 +95,15 @@ class ameAdminBarHider {
 		<!--suppress CssUnusedSymbol -->
 		<style type="text/css"> .show-admin-bar { display: none; } </style>
 		<?php
+	}
+
+	/**
+	 * Remove the callback that adds an "!important" top margin to <html> and <body>.
+	 *
+	 * Normally this isn't necessary. It's a compatibility workaround.
+	 */
+	public function remove_bump_css() {
+		remove_action('wp_head', '_admin_bar_bump_cb');
 	}
 
 	/**

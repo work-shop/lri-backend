@@ -19,6 +19,8 @@ class ameTestDataManipulator {
 			$this->deleteRoles();
 		} elseif ( !empty($_GET['ame_forget_plugin']) ) {
 			$this->forgetPlugin();
+		} elseif ( !empty($_GET['ame_toggle_module']) ) {
+			$this->toggleModule();
 		}
 	}
 
@@ -79,6 +81,17 @@ class ameTestDataManipulator {
 		$pluginFile = strval($_GET['ame_forget_plugin']);
 		$pluginVisibility = amePluginVisibility::getLastCreatedInstance();
 		$pluginVisibility->forgetPlugin($pluginFile);
+	}
+
+	private function toggleModule() {
+		global $wp_menu_editor;
+
+		$moduleId = strval($_GET['ame_toggle_module']);
+		$newState = boolval($_GET['ame_active']);
+
+		$isActive = $wp_menu_editor->get_plugin_option('is_active_module');
+		$isActive[$moduleId] = $newState;
+		$wp_menu_editor->set_plugin_option('is_active_module', $isActive);
 	}
 }
 

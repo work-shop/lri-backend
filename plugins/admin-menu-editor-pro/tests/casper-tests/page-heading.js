@@ -39,8 +39,11 @@ casper.thenOpen(ameTestConfig.adminUrl + '/plugins.php', function() {
 		'My Custom Heading',
 		'The "Plugins" heading was changed to "My Custom Heading"'
 	);
+
+	//In WP 4.2 and below the button class was add-new-h2.
+	//Before WP 4.8, the button was inside the heading. Now it's after the H1.
 	casper.test.assertExists(
-		'.wrap > h1 .page-title-action', //In WP 4.2 and below the button class was add-new-h2.
+		'.wrap > h1 + .page-title-action',
 		'The "Add New" button still exists'
 	);
 });

@@ -1,34 +1,26 @@
 <?php
 
-class ameVisibleUsers {
-	/**
-	 * @var WPMenuEditor
-	 */
-	private $wp_menu_editor;
+class ameVisibleUsers extends ameModule {
+	public function __construct($menuEditor) {
+		parent::__construct($menuEditor);
 
-	public function __construct($wp_menu_editor) {
-		$this->wp_menu_editor = $wp_menu_editor;
-
-		add_action('wp_ajax_ws_ame_search_users', array($this, 'ajax_search_users'));
-
-		add_action('admin_menu_editor-register_scripts', array($this, 'register_scripts'));
-		add_filter('admin_menu_editor-editor_script_dependencies', array($this, 'add_editor_script'));
-
-		add_filter('admin_menu_editor-footer', array($this, 'output_template'));
+		add_action('wp_ajax_ws_ame_search_users', array($this, 'ajaxSearchUsers'));
+		add_filter('admin_menu_editor-editor_script_dependencies', array($this, 'addEditorScript'));
+		add_filter('admin_menu_editor-footer', array($this, 'outputDialogTemplate'));
 	}
 
-	public function ajax_search_users() {
+	public function ajaxSearchUsers() {
 		global $wpdb; /** @var wpdb $wpdb */
 		global $wp_roles;
 
-		if ( !$this->wp_menu_editor->current_user_can_edit_menu() ) {
-			die($this->wp_menu_editor->json_encode(array(
+		if ( !$this->menuEditor->current_user_can_edit_menu() ) {
+			die($this->menuEditor->json_encode(array(
 				'error' => __("You don't have permission to use Admin Menu Editor Pro.", 'admin-menu-editor')
 			)));
 		}
 
 		if ( !check_ajax_referer('search_users', false, false) ){
-			die($this->wp_menu_editor->json_encode(array(
+			die($this->menuEditor->json_encode(array(
 				'error' => __("Access denied. Invalid nonce.", 'admin-menu-editor')
 			)));
 		}
@@ -66,7 +58,7 @@ class ameVisibleUsers {
 		foreach($users as $user) {
 			//Capabilities (when present) are stored as serialized PHP arrays.
 			if ( !empty($user['capabilities']) ) {
-				$capabilities = $this->wp_menu_editor->castValuesToBool(unserialize($user['capabilities']));
+				$capabilities = $this->menuEditor->castValuesToBool(unserialize($user['capabilities']));
 			} else {
 				$capabilities = array();
 			}
@@ -95,13 +87,15 @@ class ameVisibleUsers {
 			'users' => $results,
 			'moreResultsAvailable' => $more_results_available,
 		);
-		die($this->wp_menu_editor->json_encode($response));
+		die($this->menuEditor->json_encode($response));
 	}
 
-	public function register_scripts() {
+	public function registerScripts() {
+		parent::registerScripts();
+
 		wp_register_auto_versioned_script(
 			'ame-visible-users',
-			plugins_url('extras/modules/visible-users/visible-users.js', $this->wp_menu_editor->plugin_file),
+			plugins_url('extras/modules/visible-users/visible-users.js', $this->menuEditor->plugin_file),
 			array('jquery', 'ame-lodash', 'jquery-ui-dialog', 'jquery-json', 'ame-actor-manager',)
 		);
 
@@ -115,12 +109,12 @@ class ameVisibleUsers {
 		);
 	}
 
-	public function add_editor_script($dependencies) {
+	public function addEditorScript($dependencies) {
 		$dependencies[] = 'ame-visible-users';
 		return $dependencies;
 	}
 
-	public function output_template() {
+	public function outputDialogTemplate() {
 		if ( wp_script_is('ame-visible-users', 'enqueued') || wp_script_is('ame-visible-users', 'done') ) {
 			include dirname(__FILE__) . '/visible-users-template.php';
 		}
