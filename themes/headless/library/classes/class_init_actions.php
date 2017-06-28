@@ -190,31 +190,31 @@ class WS_Init_Actions extends WS_Action_Set {
 				'menu_icon'   => 'dashicons-editor-table'
 				));	
 
-		// //newsletter
-		// register_post_type( 'newsletters',
-		// 	array(
-		// 		'labels' => array(
-		// 			'name' => 'Newsletters',
-		// 			'singular_name' => 'Newsletter',
-		// 			'add_new' => 'Add New',
-		// 			'add_new_item' => 'Add New Newsletter',
-		// 			'edit_item' => 'Edit Newsletter',
-		// 			'new_item' => 'New Newsletter',
-		// 			'all_items' => 'All Newsletters',
-		// 			'view_item' => 'View Newsletter',
-		// 			'search_items' => 'Search Newsletters',
-		// 			'not_found' =>  'No Newsletters found',
-		// 			'not_found_in_trash' => 'No Newsletters found in Trash',
-		// 			),
-		// 		'public' => true,
-		// 		'has_archive' => true,
-		// 		'rewrite' => array('slug' => 'newsletters'),
-		// 		'show_in_rest'       => true,
-		// 		'rest_base'          => 'newsletters',
-		// 		'rest_controller_class' => 'WP_REST_Posts_Controller',
-		// 		'supports' => array( 'title'),
-		// 		'menu_icon'   => 'dashicons-images-alt2'
-		// 		));						
+		//newsletter
+		register_post_type( 'newsletters',
+			array(
+				'labels' => array(
+					'name' => 'Newsletters',
+					'singular_name' => 'Newsletter',
+					'add_new' => 'Add New',
+					'add_new_item' => 'Add New Newsletter',
+					'edit_item' => 'Edit Newsletter',
+					'new_item' => 'New Newsletter',
+					'all_items' => 'All Newsletters',
+					'view_item' => 'View Newsletter',
+					'search_items' => 'Search Newsletters',
+					'not_found' =>  'No Newsletters found',
+					'not_found_in_trash' => 'No Newsletters found in Trash',
+					),
+				'public' => true,
+				'has_archive' => true,
+				'rewrite' => array('slug' => 'newsletters'),
+				'show_in_rest'       => true,
+				'rest_base'          => 'newsletters',
+				'rest_controller_class' => 'WP_REST_Posts_Controller',
+				'supports' => array( 'title'),
+				'menu_icon'   => 'dashicons-images-alt2'
+				));						
 
 		//add ACF options pages
 		//optional - include a custom icon, list of icons available at https://developer.wordpress.org/resource/dashicons/
