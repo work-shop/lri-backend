@@ -26,6 +26,7 @@
 
 	require_once( 'library/custom_dashboard_setup.php');
 
-
+	require_once( 'library/custom_endpoints.php');
+	
 
 ?>
