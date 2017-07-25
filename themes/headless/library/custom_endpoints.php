@@ -12,11 +12,11 @@ function get_form( $request ) {
 	
 	$form_id = $_GET['form'];
 
-	$form = gravity_form($form_id, false, false, false, '', true, 1);
+	$form = gravity_form($form_id, false, false, false, '', true, 1, false);
 
-	// if ( empty( $form ) ) {
-	// 	return null;
-	// }
+	if ( empty( $form ) ) {
+		return null;
+	}
 
 	return new WP_REST_Response( $form, 200 );
 
