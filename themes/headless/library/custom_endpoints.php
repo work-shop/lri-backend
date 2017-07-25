@@ -14,9 +14,9 @@ function get_form( $request ) {
 
 	$form = gravity_form($form_id, false, false, false, '', true, 1);
 
-	if ( empty( $form ) ) {
-		return null;
-	}
+	// if ( empty( $form ) ) {
+	// 	return null;
+	// }
 
 	return new WP_REST_Response( $form, 200 );
 
