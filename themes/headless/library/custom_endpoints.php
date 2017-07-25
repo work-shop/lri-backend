@@ -10,8 +10,7 @@ add_action( 'rest_api_init', function () {
 
 function get_form( $request ) {
 	
-	//$form_id = $_GET['form'];
-	$form_id = '1';
+	$form_id = $_GET['form'];
 
 	$form = gravity_form($form_id, false, false, false, '', true, 1);
 

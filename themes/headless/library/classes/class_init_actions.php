@@ -182,9 +182,9 @@ class WS_Init_Actions extends WS_Action_Set {
 					),
 				'public' => true,
 				'has_archive' => true,
-				'rewrite' => array('slug' => 'formpages'),
+				'rewrite' => array('slug' => 'forms'),
 				'show_in_rest'       => true,
-				'rest_base'          => 'formpages',
+				'rest_base'          => 'forms',
 				'rest_controller_class' => 'WP_REST_Posts_Controller',
 				'supports' => array( 'title'),
 				'menu_icon'   => 'dashicons-editor-table'
