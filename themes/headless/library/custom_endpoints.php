@@ -12,7 +12,7 @@ function get_form( $request ) {
 	
 	$form_id = $_GET['form'];
 
-	$form = gravity_form($form_id, false, false, false, '', true, 1, false);
+	$form = gravity_form($form_id, false, false, false, '', false, 1, false);
 
 	if ( empty( $form ) ) {
 		return null;
