@@ -118,11 +118,12 @@ class GFLogging extends GFAddOn {
 	/**
 	 * Defines the maximum file size for a log file.
 	 *
+	 * @since  2.2.3.3 Reduced max file size from 100MB to 5MB.
 	 * @since  2.2
 	 * @access private
 	 * @var    string $max_file_size Maximum file size for a log file.
 	 */
-	private $max_file_size = 104857600;
+	private $max_file_size = 5242880;
 
 	/**
 	 * Defines the maximum number of log files to store for a plugin.

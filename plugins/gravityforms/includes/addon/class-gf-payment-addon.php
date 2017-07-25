@@ -3330,10 +3330,6 @@ abstract class GFPaymentAddOn extends GFFeedAddOn {
 	 * @return RGCurrency
 	 */
 	public function get_currency( $currency_code = '' ) {
-		if ( ! class_exists( 'RGCurrency' ) ) {
-			require_once( GFCommon::get_base_path() . '/currency.php' );
-		}
-
 		if ( empty( $currency_code ) ) {
 			$currency_code = GFCommon::get_currency();
 		}

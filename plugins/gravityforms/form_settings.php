@@ -79,7 +79,6 @@ class GFFormSettings {
 	public static function form_settings_ui() {
 
 		require_once( GFCommon::get_base_path() . '/form_detail.php' );
-		require_once( GFCommon::get_base_path() . '/currency.php' );
 
 		$form_id       = rgget( 'id' );
 		$form          = RGFormsModel::get_form_meta( $form_id );

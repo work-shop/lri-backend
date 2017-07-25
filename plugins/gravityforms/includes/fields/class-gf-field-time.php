@@ -316,14 +316,14 @@ class GF_Field_Time extends GF_Field {
 			$value[2] = rgar( $matches, 3 );
 		}
 
-		$hour   = empty( $value[0] ) ? '0' : wp_strip_all_tags( $value[0] );
-		$minute = empty( $value[1] ) ? '0' : wp_strip_all_tags( $value[1] );
+		$hour   = wp_strip_all_tags( $value[0] );
+		$minute = wp_strip_all_tags( $value[1] );
 		$ampm   = wp_strip_all_tags( rgar( $value, 2 ) );
 		if ( ! empty( $ampm ) ) {
 			$ampm = " $ampm";
 		}
 
-		if ( ! ( empty( $hour ) && empty( $minute ) ) ) {
+		if ( ! ( rgblank( $hour ) && rgblank( $minute ) ) ) {
 			$value = sprintf( '%02d:%02d%s', $hour, $minute, $ampm );
 		} else {
 			$value = '';

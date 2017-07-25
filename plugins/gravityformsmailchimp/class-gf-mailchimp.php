@@ -188,7 +188,7 @@ class GFMailChimp extends GFFeedAddOn {
 
 		if ( $this->is_gravityforms_supported() ) {
 
-			// Load the Mailgun API library.
+			// Load the MailChimp API library.
 			if ( ! class_exists( 'GF_MailChimp_API' ) ) {
 				require_once( 'includes/class-gf-mailchimp-api.php' );
 			}
@@ -248,7 +248,9 @@ class GFMailChimp extends GFFeedAddOn {
 				'handle'  => $this->_slug . '_form_settings',
 				'src'     => $this->get_base_url() . '/css/form_settings.css',
 				'version' => $this->_version,
-				'enqueue' => array( 'admin_page' => array( 'form_settings' ) ),
+				'enqueue' => array(
+					array( 'admin_page' => array( 'form_settings' ) ),
+				),
 			),
 		);
 
@@ -1045,9 +1047,6 @@ class GFMailChimp extends GFFeedAddOn {
 			return;
 		}
 
-		// Initialize interests array.
-		$interests = $member_found ? $member['interests'] : array();
-
 		/**
 		 * Modify whether a user that is already subscribed to your list has their groups replaced when submitting the form a second time.
 		 *
@@ -1063,8 +1062,8 @@ class GFMailChimp extends GFFeedAddOn {
 		// Initialize interests to keep array.
 		$interests_to_keep = array();
 
-		// Get existing interests.
-		$existing_interests = rgar( $member, 'interests' );
+		// Initialize interests array.
+		$interests = $existing_interests = rgar( $member, 'interests', array() );
 
 		// If member was found, has existing interests and we are not keeping existing interest categories, remove them.
 		if ( $member_found && $existing_interests ) {
@@ -1117,7 +1116,7 @@ class GFMailChimp extends GFFeedAddOn {
 		}
 
 		// If member status is not defined, set to subscribed.
-		$member_status = isset( $member_status ) ? $member_status : 'subscribed';
+		$member_status = isset( $member_status ) && $member_status !== 'unsubscribed' ? $member_status : 'subscribed';
 
 		// Prepare subscription arguments.
 		$subscription = array(

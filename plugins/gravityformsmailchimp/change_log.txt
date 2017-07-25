@@ -1,4 +1,16 @@
 ------------------------------------------------------------------------------------------------------------------
+Version 4.2.3
+	- Fixed an issue with the member status on resubscription to the list.
+
+------------------------------------------------------------------------------------------------------------------
+Version 4.2.2
+	- Fixed PHP notice if the interests are not returned by the MailChimp API for the existing member.
+
+------------------------------------------------------------------------------------------------------------------
+Version 4.2.1
+	- Fixed issue with css file that was being enqueued in every page.
+
+------------------------------------------------------------------------------------------------------------------
 Version 4.2
 	- Added additional logging when checking if a user's subscription status.
 	- Added existing member object as sixth parameter of "gform_mailchimp_subscription" filter.
