@@ -10,9 +10,15 @@ class WS_Init_Filters extends WS_Filter_Set {
 		parent::__construct( array(
 			'upload_mimes' 			=> 'svg_mime_types',
 			'tiny_mce_before_init'	=> 'my_format_TinyMCE',
-            'wp_get_attachment_url' => 'rewrite_cdn_url'
+            'wp_get_attachment_url' => 'rewrite_cdn_url',
+            'gform_ajax_iframe_content' => 'add_gform_domain'
     	));
 	}
+
+    function add_gform_domain( $data ) {
+        echo "<script>document.domain = 'localhost';</script>\n";
+        return $data;
+    }
 
 	public function svg_mime_types( $mimes ) {
 		$mimes['svg'] = 'image/svg+xml';
