@@ -22,6 +22,9 @@ class WS_Init_Filters extends WS_Filter_Set {
     }
 
     function process_form_action_url( $form_tag, $form ) {
+
+        var_dump($form);
+
         $form_tag = preg_replace( "|action='(.*?)'|", "action='http://cms.leadershipri.org/gravityformsapi/forms/" . $form['id'] . "/submissions'", $form_tag );
 
         return $form_tag;
