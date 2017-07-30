@@ -21,6 +21,18 @@ class WS_Init_Actions extends WS_Action_Set {
 
 	/** POST TYPES AND OTHER INIT ACTIONS */
 	public function setup() {
+        /**
+         * Set cross origin request filters to enable
+         * Gravity Forms AJAX Postback in cross origin I-frames.
+         */
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
+        header("Access-Control-Allow-Headers: Origin, Content-Type, Accept");
+
+        if('OPTIONS' == $_SERVER['REQUEST_METHOD']) {
+            status_header(200);
+            exit();
+        }
 
 		//add additional featured image sizes
 		//NOTE: avoid hyphens in names as they could create errors in frontend
@@ -41,6 +53,7 @@ class WS_Init_Actions extends WS_Action_Set {
 		if ( function_exists( 'add_theme_support' ) ) {
 			add_theme_support( 'post-thumbnails' );
 		}
+
 
 
 		//register post types
@@ -188,7 +201,7 @@ class WS_Init_Actions extends WS_Action_Set {
 				'rest_controller_class' => 'WP_REST_Posts_Controller',
 				'supports' => array( 'title'),
 				'menu_icon'   => 'dashicons-editor-table'
-				));	
+				));
 
 		//newsletter
 		register_post_type( 'newsletters',
@@ -214,7 +227,7 @@ class WS_Init_Actions extends WS_Action_Set {
 				'rest_controller_class' => 'WP_REST_Posts_Controller',
 				'supports' => array( 'title'),
 				'menu_icon'   => 'dashicons-images-alt2'
-				));						
+				));
 
 		//add ACF options pages
 		//optional - include a custom icon, list of icons available at https://developer.wordpress.org/resource/dashicons/
