@@ -51,9 +51,9 @@ function get_form_scripts( $request ) {
 
     wp_head();
 
-    $scripts = stripcslashes( htmlspecialchars_decode( ob_get_clean() ) );
+    $scripts = ob_get_clean();
 
-    return $scripts;
+    return new WP_REST_Response( $scripts, 200 );
 
 }
 
