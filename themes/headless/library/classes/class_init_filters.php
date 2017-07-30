@@ -11,13 +11,20 @@ class WS_Init_Filters extends WS_Filter_Set {
 			'upload_mimes' 			=> 'svg_mime_types',
 			'tiny_mce_before_init'	=> 'my_format_TinyMCE',
             'wp_get_attachment_url' => 'rewrite_cdn_url',
-            'gform_ajax_iframe_content' => 'add_gform_domain'
+            'gform_ajax_iframe_content' => 'add_gform_domain',
+            'gform_form_tag'            => 'process_form_action_url'
     	));
 	}
 
     function add_gform_domain( $data ) {
         echo "<script>document.domain = 'leadershipri.org';</script>\n";
         return $data;
+    }
+
+    function process_form_action_url( $form_tag, $form ) {
+        $form_tag = preg_replace( "|action='(.*?)'|", "action='http://cms.leadershipri.org/gravityformsapi/forms/" . $form['id'] . "/submissions'", $form_tag );
+
+        return $form_tag;
     }
 
 	public function svg_mime_types( $mimes ) {
