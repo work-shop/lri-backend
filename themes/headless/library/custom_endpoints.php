@@ -53,8 +53,9 @@ function get_form_scripts( $request ) {
 
     $scripts = stripcslashes( htmlspecialchars_decode( ob_get_clean() ) );
 
+    var_dump( $scripts );
 
-    return new WP_REST_Response( $scripts, true );
+    return $scripts;
 
 }
 
