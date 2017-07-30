@@ -16,7 +16,7 @@ class WS_Init_Filters extends WS_Filter_Set {
 	}
 
     function add_gform_domain( $data ) {
-        echo "<script>document.domain = 'localhost';</script>\n";
+        echo "<script>document.domain = 'leadershipri.org';</script>\n";
         return $data;
     }
 
