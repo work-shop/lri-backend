@@ -12,7 +12,7 @@ class WS_Init_Filters extends WS_Filter_Set {
 			'tiny_mce_before_init'	=> 'my_format_TinyMCE',
             'wp_get_attachment_url' => 'rewrite_cdn_url',
             'gform_ajax_iframe_content' => 'add_gform_domain',
-            'gform_form_tag'            => 'process_form_action_url'
+            'gform_form_tag'            => array('process_form_action_url', 10, 2)
     	));
 	}
 
