@@ -30,7 +30,7 @@ class Wslm_LicenseManagerClient {
     /** @var Wslm_ProductLicense */
     private $license = null;
 
-    /** @var PluginUpdateChecker_3_2 */
+    /** @var Puc_v4p2_Plugin_UpdateChecker */
     private $updateChecker = null;
 
     /**
@@ -449,9 +449,9 @@ class Wslm_LicenseManagerClient {
     }
 
     /**
-       * @param PluginInfo_3_2|null $pluginInfo
+       * @param Puc_v4p2_Plugin_Info|null $pluginInfo
        * @param array $result
-       * @return PluginInfo_3_2|null
+       * @return Puc_v4p2_Plugin_Info|null
        */
     public function refreshLicenseFromPluginInfo($pluginInfo, $result) {
         if ( !is_wp_error($result) && isset($result['response']['code']) && ($result['response']['code'] == 200) && !empty($result['body']) ){
@@ -468,8 +468,8 @@ class Wslm_LicenseManagerClient {
 	 * Add license data to the update download URL if we have a valid license,
 	 * or remove the URL (thus disabling one-click updates) if we don't.
 	 *
-	 * @param PluginUpdate_3_2|PluginInfo_3_2 $pluginInfo
-	 * @return PluginUpdate_3_2|PluginInfo_3_2
+	 * @param Puc_v4p2_Plugin_Update|Puc_v4p2_Plugin_Info $pluginInfo
+	 * @return Puc_v4p2_Plugin_Update|Puc_v4p2_Plugin_Info
 	 */
 	public function filterUpdateDownloadUrl($pluginInfo) {
 		if ( isset($pluginInfo, $pluginInfo->download_url) && !empty($pluginInfo->download_url) ) {

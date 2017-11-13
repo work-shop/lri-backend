@@ -3,8 +3,8 @@ Contributors: whiteshadow
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=A6P9S6CE3SRSW
 Tags: admin, dashboard, menu, security, wpmu
 Requires at least: 4.1
-Tested up to: 4.8
-Stable tag: 2.5.1
+Tested up to: 4.9
+Stable tag: 2.6
 
 Lets you directly edit the WordPress admin menu. You can re-order, hide or rename existing menus, add custom menus and more.
 
@@ -84,7 +84,26 @@ Here are some usage tips and other things that can be good to know when using th
 
 [Get the latest version here.](http://adminmenueditor.com/updates/)
 
-= 2.5.1 =
+= 2.6 =
+##### Fixed
+* Added a workaround for a buggy "defer_parsing_of_js" code snippet that some users have added to their functions.php. This snippet produces invalid HTML code, which used to break the menu editor.
+* Fixed a bug that caused WP-CLI to behave as if there were no installed plugins and no available updates.
+* Fixed the "Tags" menu showing up as inaccessible.
+* Fixed missing color labels in WordPress 4.9.
+* Fixed a PHP warning that appeared when using this plugin together with WooCommerce or YITH WooCommerce Gift Cards and running PHP 7.1.
+* Fixed a bug that prevented some capability changes from being applied.
+* Fixed a bug where submenu items would not inherit FontAwesome icons from their parent menu.
+
+##### Added
+* You can now edit the network admin menu. The settings page is in the network admin, under "Settings -> Menu Editor Pro". Note that you still need to go to a site dashboard to edit the regular admin menu.
+* The "Embed WP page" feature now works with private pages and posts, not just public pages.
+* Added the ability to hide the special "Welcome" widget.
+
+##### Changed
+* Minor performance improvements.
+* Tested with WP 4.8.3 and 4.9-beta.
+
+= 2.5.1 (2017-06-09) =
 ##### Fixed
 * Fixed a WP-CLI compatibility issue where some CLI commands would fail with a fatal error: "Call to a member function check_current_user_access() on null".
 * Fixed a couple of UI layout issues that affected RTL sites.
@@ -92,7 +111,7 @@ Here are some usage tips and other things that can be good to know when using th
 * Fixed an oversight that could cause a fatal error if a theme or plugin was using magic methods (i.e. __call and __callStatic) for hook callbacks.
 * Fixed a CSS issue where, when changing the menu icon, certain Dashicons wouldn't properly replace the original icon.
 
-= 2.5 =
+= 2.5 (2017-06-05) =
 ##### Added
 * You can edit plugin names and descriptions through the "Plugins" tab. This only changes how plugins are displayed on the "Plugins" page. It doesn't affect plugin files on disk.
 * Added "Meta Boxes" tab. It lets you hide meta boxes and custom fields from roles and users. 
@@ -112,7 +131,7 @@ Here are some usage tips and other things that can be good to know when using th
 * When you use the "A-Z" button to sort top level menus, it also sorts submenu items. To avoid compatibility issues, the first item of each submenu stays in its original position.
 * Automatically reset plugin access if the only allowed user no longer exists. This should cut down on the number of users who accidentally lock themselves out by setting "Who can access the plugin" to "Only the current user" and then later deleting that user account.
 
-= 2.4.3 =
+= 2.4.3 (2017-01-05) =
 * Added a workaround for WooCommerce 2.6.8 to display the number of new orders in the "Orders" menu title.
 * Tested with WP 4.7 and 4.8-alpha.
 

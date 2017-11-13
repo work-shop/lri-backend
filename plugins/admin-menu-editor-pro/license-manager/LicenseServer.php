@@ -101,7 +101,7 @@ class Wslm_LicenseServer {
 		//to ensure only valid fields are included in the query.
 		$licenseDbFields = array(
 			'license_id', 'license_key', 'product_id', 'product_slug', 'customer_id',
-			'status', 'issued_on', 'expires_on', 'max_sites'
+			'status', 'issued_on', 'expires_on', 'max_sites', 'base_price', 'renewal_price',
 		);
 		$licenseDbFields = apply_filters('wslm_license_db_fields', $licenseDbFields);
 		$data = array_intersect_key($data, array_flip($licenseDbFields));

@@ -4016,7 +4016,7 @@ Content-Type: text/html;
 
 		$display_all = $field->displayAllCategories;
 
-		$args = array( 'hide_empty' => false, 'orderby' => 'name' );
+		$args = array( 'hide_empty' => false, 'orderby' => 'name', 'taxonomy' => 'category' );
 
 		if ( ! $display_all ) {
 			foreach ( $field->choices as $field_choice_to_include ) {
@@ -4025,7 +4025,7 @@ Content-Type: text/html;
 		}
 
 		$args  = gf_apply_filters( array( 'gform_post_category_args', $field->id ), $args, $field );
-		$terms = get_terms( 'category', $args );
+		$terms = get_terms( $args['taxonomy'], $args );
 
 		$terms_copy = unserialize( serialize( $terms ) ); // deep copy the terms to avoid repeating GFCategoryWalker on previously cached terms.
 		$walker     = new GFCategoryWalker();
@@ -4378,7 +4378,7 @@ Content-Type: text/html;
 		$gf_vars['confirmationInvalidPageSelection'] = __( 'Please select a page.', 'gravityforms' );
 		$gf_vars['confirmationInvalidRedirect']      = __( 'Please enter a URL.', 'gravityforms' );
 		$gf_vars['confirmationInvalidName']          = __( 'Please enter a confirmation name.', 'gravityforms' );
-		$gf_vars['confirmationDeleteField']          = __( "Warning! Deleting this field will also delete all entry data associated with it. 'Cancel' to stop. 'OK' to delete", 'gravityforms' );
+		$gf_vars['confirmationDeleteField']          = __( "Warning! Deleting this field will also delete all entry data associated with it. 'Cancel' to stop. 'OK' to delete.", 'gravityforms' );
 
 		$gf_vars['conditionalLogicDependency']           = __( "Warning! This form contains conditional logic dependent upon this field. Deleting this field will deactivate those conditional logic rules and also delete all entry data associated with the field. 'OK' to delete, 'Cancel' to abort.", 'gravityforms' );
 		$gf_vars['conditionalLogicDependencyChoice']     = __( "This form contains conditional logic dependent upon this choice. Are you sure you want to delete this choice? 'OK' to delete, 'Cancel' to abort.", 'gravityforms' );

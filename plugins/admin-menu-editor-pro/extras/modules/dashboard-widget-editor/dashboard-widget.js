@@ -19,6 +19,7 @@ var AmeDashboardWidget = (function () {
         this.missingWidgetTooltip = "N/A";
         this.canBeDeleted = false;
         this.canChangePriority = false;
+        this.canChangeTitle = true;
         this.propertyTemplate = '';
         this.widgetType = null;
         this.rawProperties = settings;
@@ -34,6 +35,7 @@ var AmeDashboardWidget = (function () {
             deferEvaluation: true //this.title might not be initialised at this point, so skip it until later.
         });
         this.isOpen = ko.observable(false);
+        this.areAdvancedPropertiesVisible = ko.observable(true);
         this.grantAccess = new AmeActorAccessDictionary(settings.hasOwnProperty('grantAccess') ? settings['grantAccess'] : {});
         //Indeterminate checkbox state: when the widget is enabled for some roles and disabled for others.
         var _isIndeterminate = ko.observable(false);
@@ -145,7 +147,8 @@ var AmeDashboardWidget = (function () {
         }
         return properties;
     };
-    AmeDashboardWidget.prototype.actorHasAccess = function (actorId, actor) {
+    AmeDashboardWidget.prototype.actorHasAccess = function (actorId, actor, defaultAccess) {
+        if (defaultAccess === void 0) { defaultAccess = true; }
         //Is there a setting for this actor specifically?
         var hasAccess = this.grantAccess.get(actorId, null);
         if (hasAccess !== null) {
@@ -168,11 +171,11 @@ var AmeDashboardWidget = (function () {
             return result;
         }
         //By default, all widgets are visible to everyone.
-        return true;
+        return defaultAccess;
     };
+    AmeDashboardWidget._ = wsAmeLodash;
     return AmeDashboardWidget;
 }());
-AmeDashboardWidget._ = wsAmeLodash;
 var AmeActorAccessDictionary = (function () {
     function AmeActorAccessDictionary(initialData) {
         this.items = {};
@@ -287,6 +290,42 @@ var AmeCustomHtmlWidget = (function (_super) {
     };
     return AmeCustomHtmlWidget;
 }(AmeDashboardWidget));
+var AmeWelcomeWidget = (function (_super) {
+    __extends(AmeWelcomeWidget, _super);
+    function AmeWelcomeWidget(settings, widgetEditor) {
+        var _this = this;
+        var _ = AmeDashboardWidget._;
+        if (_.isArray(settings)) {
+            settings = {};
+        }
+        settings = _.merge({
+            id: AmeWelcomeWidget.permanentId,
+            isPresent: true,
+            grantAccess: {}
+        }, settings);
+        _this = _super.call(this, settings, widgetEditor) || this;
+        _this.title = ko.observable('Welcome');
+        _this.location = ko.observable('normal');
+        _this.priority = ko.observable('high');
+        _this.canChangeTitle = false;
+        _this.canChangePriority = false;
+        _this.areAdvancedPropertiesVisible(false);
+        //The "Welcome" widget is part of WordPress core. It's always present and can't be deleted.
+        _this.isPresent = true;
+        _this.canBeDeleted = false;
+        _this.propertyTemplate = 'ame-welcome-widget-template';
+        return _this;
+    }
+    AmeWelcomeWidget.prototype.actorHasAccess = function (actorId, actor, defaultAccess) {
+        if (defaultAccess === void 0) { defaultAccess = true; }
+        //Only people who have the "edit_theme_options" capability can see the "Welcome" panel.
+        //See /wp-admin/index.php, line #108 or thereabouts.
+        defaultAccess = AmeActors.hasCapByDefault(actorId, 'edit_theme_options');
+        return _super.prototype.actorHasAccess.call(this, actorId, actor, defaultAccess);
+    };
+    AmeWelcomeWidget.permanentId = 'special:welcome-panel';
+    return AmeWelcomeWidget;
+}(AmeDashboardWidget));
 var AmeWidgetPropertyComponent = (function () {
     function AmeWidgetPropertyComponent(params) {
         this.widget = params['widget'];
@@ -301,4 +340,3 @@ ko.components.register('ame-widget-property', {
         element: 'ame-widget-property-template'
     }
 });
-//# sourceMappingURL=dashboard-widget.js.map

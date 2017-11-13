@@ -185,11 +185,17 @@ class GFLogging extends GFAddOn {
 	public function plugin_settings_page() {
 
 		// If the delete_log parameter is set, delete the log file and display a message.
-		if ( rgget( 'delete_log' ) ) {
-			if ( wp_verify_nonce( rgget( $this->_nonce_action ), $this->_nonce_action ) && $this->delete_log_file( rgget( 'delete_log' ) ) ) {
-				GFCommon::add_message( esc_html__( 'Log file was successfully deleted.', 'gravityforms' ) );
+		$plugin_slug = rgget( 'delete_log' );
+		if ( $plugin_slug ) {
+			$supported_plugins = $this->get_supported_plugins();
+			if ( isset( $supported_plugins[ $plugin_slug ] ) ) {
+				if ( wp_verify_nonce( rgget( $this->_nonce_action ), $this->_nonce_action ) && $this->delete_log_file( rgget( 'delete_log' ) ) ) {
+					GFCommon::add_message( esc_html__( 'Log file was successfully deleted.', 'gravityforms' ) );
+				} else {
+					GFCommon::add_error_message( esc_html__( 'Log file could not be deleted.', 'gravityforms' ) );
+				}
 			} else {
-				GFCommon::add_error_message( esc_html__( 'Log file could not be deleted.', 'gravityforms' ) );
+				GFCommon::add_error_message( esc_html__( 'Invalid log file.', 'gravityforms' ) );
 			}
 		}
 

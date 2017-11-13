@@ -1,7 +1,7 @@
 <?php
 
 final class ITSEC_File_Change_Settings_Page extends ITSEC_Module_Settings_Page {
-	private $script_version = 1;
+	private $script_version = 2;
 
 
 	public function __construct() {
@@ -123,14 +123,6 @@ final class ITSEC_File_Change_Settings_Page extends ITSEC_Module_Settings_Page {
 				<?php $form->add_textarea( 'types', array( 'wrap' => 'off', 'cols' => 20, 'rows' => 10 ) ); ?>
 				<br />
 				<label for="itsec-file-change-types"><?php _e( 'File types listed here will not be checked for changes. While it is possible to change files such as images it is quite rare and nearly all known WordPress attacks exploit php, js and other text files.', 'better-wp-security' ); ?></label>
-			</td>
-		</tr>
-		<tr>
-			<th scope="row"><label for="itsec-file-change-email"><?php _e( 'Email File Change Notifications', 'better-wp-security' ); ?></label></th>
-			<td>
-				<?php $form->add_checkbox( 'email' ); ?>
-				<label for="itsec-file-change-email"><?php _e( 'Email file change notifications', 'better-wp-security' ); ?></label>
-				<p class="description"><?php _e( 'Notifications will be sent to all emails set to receive notifications on the global settings page.', 'better-wp-security' ); ?></p>
 			</td>
 		</tr>
 		<tr>

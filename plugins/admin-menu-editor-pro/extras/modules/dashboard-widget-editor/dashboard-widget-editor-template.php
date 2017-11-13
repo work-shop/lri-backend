@@ -28,29 +28,33 @@
 
 			<div class="ame-widget-properties">
 				<ame-widget-property params="widget: $data, label: 'Title'">
-					<input data-bind="value: title" type="text" class="ame-widget-property-value" title="Title">
+					<input data-bind="value: title, enable: canChangeTitle" type="text"
+					       class="ame-widget-property-value" title="Title">
 				</ame-widget-property>
 
 				<!-- ko template: { if: propertyTemplate, name: propertyTemplate, data: $data } --><!-- /ko -->
 
-				<ame-widget-property params="widget: $data, label: 'ID'">
-					<input data-bind="value: id" type="text" class="ame-widget-property-value" readonly title="ID">
-				</ame-widget-property>
+				<div data-bind="visible: areAdvancedPropertiesVisible">
+					<ame-widget-property params="widget: $data, label: 'ID'">
+						<input data-bind="value: id" type="text" class="ame-widget-property-value" readonly title="ID">
+					</ame-widget-property>
 
-				<ame-widget-property params="widget: $data, label: 'Location'">
-					<input data-bind="value: location" type="text" class="ame-widget-property-value" readonly title="Location">
-				</ame-widget-property>
+					<ame-widget-property params="widget: $data, label: 'Location'">
+						<input data-bind="value: location" type="text" class="ame-widget-property-value" readonly
+						       title="Location">
+					</ame-widget-property>
 
-				<ame-widget-property params="widget: $data, label: 'Priority'">
-					<select data-bind="value: priority, enable: canChangePriority"
-					        class="ame-widget-property-value" title="Priority">
-						<option value="high">high</option>
-						<option value="sorted">sorted</option>
-						<option value="core">core</option>
-						<option value="default">default</option>
-						<option value="low">low</option>
-					</select>
-				</ame-widget-property>
+					<ame-widget-property params="widget: $data, label: 'Priority'">
+						<select data-bind="value: priority, enable: canChangePriority"
+						        class="ame-widget-property-value" title="Priority">
+							<option value="high">high</option>
+							<option value="sorted">sorted</option>
+							<option value="core">core</option>
+							<option value="default">default</option>
+							<option value="low">low</option>
+						</select>
+					</ame-widget-property>
+				</div>
 
 				<div class="ame-widget-control-actions">
 					<a href="#" class="ame-close-widget" data-bind="click: toggle">Close</a>
@@ -168,5 +172,12 @@
 		       title="Enable filters like automatic paragraphs, smart quotes and automatic tag balancing">
 		Apply content filters
 	</ame-widget-property>
+</template>
+
+<template id="ame-welcome-widget-template">
+	<p class="howto">
+		This is a special widget. It can't be renamed or moved. Only users who have
+		the <code>edit_theme_options</code> capability can see it.
+	</p>
 </template>
 

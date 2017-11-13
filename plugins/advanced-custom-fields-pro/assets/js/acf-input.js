@@ -1746,7 +1746,7 @@ var acf;
 			$.each(args, function(k,v){
 				
 				// object
-				if( typeof v === 'object' ) {
+				if( $.isPlainObject(v) && !$.isEmptyObject(v) ) {
 					
 					// loop
 					$.each(v, function(k2,v2){
@@ -2288,6 +2288,39 @@ var acf;
 		},
 		
 		
+		/**
+		*  esc_html
+		*
+		*  This function will escape HTML characters for safe use
+		*
+		*  @source	https://stackoverflow.com/questions/24816/escaping-html-strings-with-jquery
+		*  @date	20/9/17
+		*  @since	5.6.3
+		*
+		*  @param	n/a
+		*  @return	n/a
+		*/
+		
+		esc_html: function( string ){
+			
+			var entityMap = {
+			  '&': '&amp;',
+			  '<': '&lt;',
+			  '>': '&gt;',
+			  '"': '&quot;',
+			  "'": '&#39;',
+			  '/': '&#x2F;',
+			  '`': '&#x60;',
+			  '=': '&#x3D;'
+			};
+			
+			return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+				return entityMap[s];
+			});
+
+		},
+		
+		
 		/*
 		*  render_select
 		*
@@ -2344,7 +2377,7 @@ var acf;
 				
 				
 				// append select
-				$optgroup.append( '<option value="' + item.value + '">' + item.label + '</option>' );
+				$optgroup.append( '<option value="' + item.value + '">' + acf.esc_html(item.label) + '</option>' );
 				
 				
 				// selectedIndex
@@ -2831,13 +2864,24 @@ var acf;
 			// add event
 			$(document).on(event, context + ' ' + selector, function( e ){
 				
-				// append $el to event object
-				e.$el = $(this);
-				e.$field = acf.get_closest_field(e.$el, model.type);
+				// vars
+				var $el = $(this);
+				var $field = acf.get_closest_field( $el, model.type );
+				
+				
+				// bail early if no field
+				if( !$field.length ) return;
 				
 				
 				// focus
-				model.set('$field', e.$field);
+				if( !$field.is(model.$field) ) {
+					model.set('$field', $field);
+				}
+				
+				
+				// append to event
+				e.$el = $el;
+				e.$field = $field;
 				
 				
 				// callback
@@ -2851,9 +2895,7 @@ var acf;
 			
 			// callback
 			if( typeof this.focus === 'function' ) {
-				
 				this.focus();
-				
 			}
 			
 		},
@@ -3633,10 +3675,42 @@ var acf;
 			
 		},
 		
+		temp: function( text, $el ){
+			
+			// tooltip
+			var $el = this.tooltip( text, $el );
+			var time = 0;
+			
+			
+			// wait 250
+			time += 250;
+			
+			
+			// add class
+			setTimeout(function(){
+				
+				$el.addClass('acf-fade-up');
+				
+			}, time);
+			
+			
+			// wait 250
+			time += 250;
+			
+			
+			// remove
+			setTimeout(function(){
+				
+				$el.remove();
+				
+			}, time);
+			
+		},
+		
 		confirm: function( $el, callback, text, button_y, button_n ){
 			
 			// defaults
-			text = text || 'Are you sure?';
+			text = text || acf._e('are_you_sure');
 			button_y = button_y || '<a href="#" class="acf-confirm-y">'+acf._e('yes')+'</a>';
 			button_n = button_n || '<a href="#" class="acf-confirm-n">'+acf._e('No')+'</a>';
 			
@@ -3834,6 +3908,118 @@ var acf;
 			
 		}
 		
+	});
+	
+	
+	/**
+	*  panel
+	*
+	*  This model handles .acf-panel JS
+	*
+	*  @date	21/10/17
+	*  @since	5.6.3
+	*
+	*  @param	n/a
+	*  @return	n/a
+	*/
+	
+	var acf_panel = acf.model.extend({
+		
+		events: {
+			'click .acf-panel-title': '_click',
+		},
+		
+		_click: function( e ){
+			
+			// prevent Defailt
+			e.preventDefault();
+			
+			
+			// open close
+			this.toggle( e.$el.parent() );
+			
+		},
+		
+		is_open: function( $el ) {
+			return $el.hasClass('-open');
+		},
+		
+		toggle: function( $el ){
+			
+			// is open
+			if( this.is_open($el) ) {
+				this.close( $el );
+			} else {
+				this.open( $el );
+			}
+			
+		},
+		
+		open: function( $el ){
+			$el.addClass('-open');
+			$el.find('.acf-panel-title i').attr('class', 'dashicons dashicons-arrow-down');
+		},
+		
+		close: function( $el ){
+			$el.removeClass('-open');
+			$el.find('.acf-panel-title i').attr('class', 'dashicons dashicons-arrow-right');
+		}
+				 
+	});
+	
+	
+	/**
+	*  acf_h2_notice
+	*
+	*  This model will move the .acf-notice element quickly without the WP flicker
+	*
+	*  @date	21/10/17
+	*  @since	5.6.3
+	*
+	*  @param	n/a
+	*  @return	n/a
+	*/
+	
+	acf.notice = acf.model.extend({
+		
+		actions: {
+			'prepare': 'prepare',
+		},
+		
+		prepare: function(){
+			
+			// vars
+			var $notice = $('.acf-notice');
+			
+			
+			// move
+			if( $notice.length ) {
+				$('h1:first').after( $notice );
+			}
+			
+		},
+		
+		html: function( text, type ){
+			
+		},
+		
+		success: function( text ){
+			
+			
+		},
+		
+		error: function( text ){
+			
+		},
+		
+		warning: function( text ){
+			
+		},
+		
+		information: function( text ){
+			
+		}
+				 
 	});
 			
 	
@@ -4375,6 +4561,65 @@ var acf;
 	});
 
 	
+})(jQuery);
+
+(function($){
+	
+	acf.fields.button_group = acf.field.extend({
+		
+		type: 'button_group',
+		$div: null,
+		
+		events: {
+			'click input[type="radio"]': 'click'
+		},
+		
+		focus: function(){
+			
+			// focus on $select
+			this.$div = this.$field.find('.acf-button-group');
+			
+			
+			// get options
+			this.o = acf.get_data(this.$div, {
+				allow_null: 0
+			});
+			
+		},
+		
+		click: function( e ){
+			
+			// vars
+			var $radio = e.$el;
+			var $label = $radio.parent('label');
+			var selected = $label.hasClass('selected');
+				
+				
+			// remove previous selected
+			this.$div.find('.selected').removeClass('selected');
+				
+			
+			// add active class
+			$label.addClass('selected');
+			
+			
+			// allow null
+			if( this.o.allow_null && selected ) {
+				
+				// unselect
+				e.$el.prop('checked', false);
+				$label.removeClass('selected');
+				
+				
+				// trigger change
+				e.$el.trigger('change');
+				
+			}
+			
+		}
+		
+	});	
+
 })(jQuery);
 
 (function($){
@@ -5014,7 +5259,7 @@ var acf;
 			
 			
 			// input with :checked
-			if( type == 'true_false' || type == 'checkbox' || type == 'radio' ) {
+			if( type == 'true_false' || type == 'checkbox' || type == 'radio' || type == 'button_group' ) {
 				
 				match = this.calculate_checkbox( rule, $trigger );
 	        
@@ -8913,6 +9158,57 @@ var acf;
 
 (function($){
 	
+	acf.fields.range = acf.field.extend({
+		
+		type: 'range',
+		$el: null,
+		$range: null,
+		$input: null,
+		
+		events: {
+			'input input': '_change',
+			'change input': '_change'
+		},
+		
+		focus: function(){
+			
+			// get elements
+			this.$el = this.$field.find('.acf-range-wrap');
+			this.$range = this.$el.children('input[type="range"]');
+			this.$input = this.$el.children('input[type="number"]');
+			
+		},
+		
+		_change: function( e ){
+			
+			// get value from changed element
+			var val = e.$el.val();
+			var type = e.$el.attr('type');
+			
+			
+			// allow for cleared value
+			val = val || 0;
+			
+			
+			// update sibling
+			if( type === 'range' ) {
+				
+				this.$input.val( val );
+				
+			} else {
+				
+				this.$range.val( val );
+				
+			}
+						
+		}
+		
+	});
+	
+})(jQuery);
+
+(function($){
+	
 	acf.fields.relationship = acf.field.extend({
 		
 		type: 'relationship',
@@ -9196,6 +9492,7 @@ var acf;
 			// underline search match
 			// consider removing due to bug where matched strings within HTML attributes caused incorrect results
 			// Looks like Select2 v4 has moved away from highlighting results, so perhaps we should too
+/*
 			if( this.o.s ) {
 			
 				// vars
@@ -9218,6 +9515,7 @@ var acf;
 				});
 				
 			}
+*/
 			
 			
 			// append
@@ -9957,12 +10255,6 @@ var acf;
 		add_value: function( $select, value, label ){
 			
 			this.do_function( 'add_value', arguments );
-			
-		},
-		
-		remove_value: function( $select, value ){
-			
-			this.do_function( 'remove_value', arguments );
 			
 		},
 		
@@ -11350,24 +11642,20 @@ var acf;
 		active: 1,
 		
 		actions: {
-			'add_field_error': 'add_field_error'
+			'invalid_field': 'invalid_field',
 		},
 		
-		add_field_error: function( $field ){
+		invalid_field: function( $field ){
 			
 			// bail early if already focused
 			if( !this.active ) {
-				
 				return;
-				
 			}
 			
 			
 			// bail early if not hidden by tab
 			if( !$field.hasClass('hidden-by-tab') ) {
-				
 				return;
-				
 			}
 			
 			
@@ -11770,7 +12058,11 @@ var acf;
 			
 			
 			// get options
-			this.o = acf.get_data( this.$el );
+			this.o = acf.get_data(this.$el, {
+				save: '',
+				type: '',
+				taxonomy: ''
+			});
 			
 			
 			// extra
@@ -12274,23 +12566,51 @@ var acf;
 		
 		ready: function( $el ){
 			
+			// vars
+			var $inputs = $('.acf-field input, .acf-field textarea, .acf-field select');
+			
+			
+			// bail early if no inputs
+			if( !$inputs.length ) return;
+			
+			
 			// reference
-			$el.find('.acf-field input').filter('[type="number"], [type="email"], [type="url"]').on('invalid', function( e ){
+			var self = this;
+			
+			
+			// event
+			$inputs.on('invalid', function( e ){
 				
-				// prvent defual
-				// fixes chrome bug where 'hidden-by-tab' field throws focus error
+				// vars
+				var $input = $(this);
+				var $field = acf.get_field_wrap( $input );
+				
+				
+				// action
+				acf.do_action('invalid', $input);
+				acf.do_action('invalid_field', $field);
+				
+				
+				// save draft (ignore validation)
+				if( acf.validation.ignore ) return;
+				
+				
+				// prevent default
+				// - prevents browser error message
+				// - also fixes chrome bug where 'hidden-by-tab' field throws focus error
 				e.preventDefault();
 				
 				
 				// append to errors
 				acf.validation.errors.push({
-					input: $(this).attr('name'),
+					input: $input.attr('name'),
 					message: e.target.validationMessage
 				});
 				
 				
-				// run validation
-				acf.validation.fetch( $(this).closest('form') );
+				// invalid event has prevented the form from submitting
+				// trigger acf validation fetch (safe to call multiple times)
+				acf.validation.fetch( $input.closest('form') );
 			
 			});
 			
@@ -12408,9 +12728,65 @@ var acf;
 		
 		click_ignore: function( e ) {
 			
+			// reference
+			var self = this;
+			
+			
+			// vars
 			this.ignore = 1;
 			this.$trigger = e.$el;
+			this.$form = e.$el.closest('form');
 			
+			
+			// remove error message
+			$('.'+this.message_class).each(function(){
+				acf.remove_el( $(this) );
+			});
+			
+			
+			// ignore required inputs
+			this.ignore_required_inputs();
+			
+			
+			// maybe show errors
+			setTimeout(function(){
+				self.ignore = 0;
+			}, 100);
+			
+		},
+		
+		
+		/**
+		*  ignore_required_inputs
+		*
+		*  This function will temporarily remove the 'required' attribute from all ACF inputs
+		*
+		*  @date	23/10/17
+		*  @since	5.6.3
+		*
+		*  @param	n/a
+		*  @return	n/a
+		*/
+		
+		ignore_required_inputs: function(){
+			
+			// vars
+			var $inputs = $('.acf-field input[required], .acf-field textarea[required], .acf-field select[required]');
+			
+			
+			// bail early if no inputs
+			if( !$inputs.length ) return;
+			
+			
+			// remove required
+			$inputs.prop('required', false);
+			
+			
+			// timeout
+			setTimeout(function(){
+				$inputs.prop('required', true);
+			}, 100);
+				
 		},
 		
 		
@@ -12685,8 +13061,6 @@ var acf;
 			if( !this.valid ) return;
 			
 			
-			
-			
 			// update ignore (allow form submit to not run validation)
 			this.ignore = 1;
 				
@@ -12784,95 +13158,97 @@ var acf;
 			this.$trigger = null;
 			
 			
+			// display errors
+			this.display_errors( json.errors, $form );
+			
+		},
+		
+		
+		/**
+		*  display_errors
+		*
+		*  This function will display errors
+		*
+		*  @date	23/10/17
+		*  @since	5.6.3
+		*
+		*  @param	array errors
+		*  @return	n/a
+		*/
+		
+		display_errors: function( errors, $form ){
+			
+			// bail early if no errors
+			if( !errors || !errors.length ) return;
+			
+			
 			// vars
-			var $scrollTo = null,
-				count = 0,
-				message = acf._e('validation_failed');
+			var $message = $form.children('.acf-error-message');
+			var message = acf._e('validation_failed');
+			var count = 0;
+			var $scrollTo = null;
 			
 			
-			// show field error messages
-			if( json.errors && json.errors.length > 0 ) {
+			// loop
+			for( i = 0; i < errors.length; i++ ) {
 				
-				for( var i in json.errors ) {
-					
-					// get error
-					var error = json.errors[ i ];
-					
-					
-					// is error for a specific field?
-					if( !error.input ) {
-						
-						// update message
-						message += '. ' + error.message;
-						
-						
-						// ignore following functionality
-						continue;
-						
-					}
-					
-					
-					// get input
-					var $input = $form.find('[name="' + error.input + '"]').first();
-					
-					
-					// if $_POST value was an array, this $input may not exist
-					if( !$input.exists() ) {
-						
-						$input = $form.find('[name^="' + error.input + '"]').first();
-						
-					}
-					
-					
-					// bail early if input doesn't exist
-					if( !$input.exists() ) continue;
-					
-					
-					// increase
-					count++;
-					
-					
-					// now get field
-					var $field = acf.get_field_wrap( $input );
-					
-					
-					// add error
-					this.add_error( $field, error.message );
-					
-					
-					// set $scrollTo
-					if( $scrollTo === null ) {
-						
-						$scrollTo = $field;
-						
-					}
-					
+				// vars
+				var error = errors[ i ];
+				
+				
+				// general error
+				if( !error.input ) {
+					message += '. ' + error.message;
+					continue;
 				}
 				
 				
-				// message
-				if( count == 1 ) {
-					
-					message += '. ' + acf._e('validation_failed_1');
-					
-				} else if( count > 1 ) {
-					
-					message += '. ' + acf._e('validation_failed_2').replace('%d', count);
-					
+				// get input
+				var $input = $form.find('[name="' + error.input + '"]').first();
+				
+				
+				// if $_POST value was an array, this $input may not exist
+				if( !$input.exists() ) {
+					$input = $form.find('[name^="' + error.input + '"]').first();
 				}
-			
+				
+				
+				// bail early if input doesn't exist
+				if( !$input.exists() ) continue;
+				
+				
+				// increase
+				count++;
+				
+				
+				// now get field
+				var $field = acf.get_field_wrap( $input );
+				
+				
+				// add error
+				this.add_error( $field, error.message );
+				
+				
+				// set $scrollTo
+				if( $scrollTo === null ) {
+					$scrollTo = $field;
+				}
+				
 			}
 			
-				
-			// get $message
-			var $message = $form.children('.acf-error-message');
 			
+			// message
+			if( count == 1 ) {
+				message += '. ' + acf._e('validation_failed_1');
+			} else if( count > 1 ) {
+				message += '. ' + acf._e('validation_failed_2').replace('%d', count);
+			}
+			
+			
+			// maybe create $message
 			if( !$message.exists() ) {
-				
 				$message = $('<div class="acf-error-message"><p></p><a href="#" class="acf-icon -cancel small"></a></div>');
-				
 				$form.prepend( $message );
-				
 			}
 			
 			
@@ -12882,18 +13258,14 @@ var acf;
 			
 			// if no $scrollTo, set to message
 			if( $scrollTo === null ) {
-				
 				$scrollTo = $message;
-				
 			}
 			
 			
-			// timeout avoids flicker jump
+			// timeout
 			setTimeout(function(){
-				
 				$("html, body").animate({ scrollTop: $scrollTo.offset().top - ( $(window).height() / 2 ) }, 500);
-				
-			}, 1);
+			}, 10);
 			
 		},
 		
@@ -12948,6 +13320,7 @@ var acf;
 			
 			// hook for 3rd party customization
 			acf.do_action('add_field_error', $field);
+			acf.do_action('invalid_field', $field);
 			
 		},
 		
@@ -12985,6 +13358,7 @@ var acf;
 			
 			// hook for 3rd party customization
 			acf.do_action('remove_field_error', $field);
+			acf.do_action('valid_field', $field);
 			
 		},
 		
@@ -13186,13 +13560,17 @@ var acf;
 			this.$el = this.$field.find('.wp-editor-wrap').last();
 			this.$textarea = this.$el.find('textarea');
 			
+			
 			// get options
-			this.o = acf.get_data( this.$el );
-			this.o.id = this.$textarea.attr('id');
+			this.o = acf.get_data(this.$el, {
+				toolbar:	'',
+				active:		this.$el.hasClass('tmce-active'),
+				id:			this.$textarea.attr('id')
+			});
 			
 		},
 		
-		mousedown: function(e) {
+		mousedown: function(e){
 			
 			// prevent default
 			e.preventDefault();
@@ -13214,8 +13592,13 @@ var acf;
 			if( this.$el.hasClass('delay') ) return;
 			
 			
-			// bail early if no tinyMCEPreInit (needed by both tinymce and quicktags)
-			if( typeof tinyMCEPreInit === 'undefined' ) return;
+			// vars
+			var args = {
+				tinymce:	true,
+				quicktags:	true,
+				toolbar:	this.o.toolbar,
+				mode:		this.o.active ? 'visual' : 'text',
+			};
 			
 			
 			// generate new id
@@ -13231,364 +13614,27 @@ var acf;
 			// swap
 			this.$el.replaceWith( html );			
 			
-						
+			
 			// update id
-			this.o.id = new_id
+			this.o.id = new_id;
 			
-			
+						
 			// initialize
-			this.initialize_tinymce();
-			this.initialize_quicktags();
+			acf.tinymce.initialize( this.o.id, args, this.$field );
 			
 		},
-		
-		initialize_tinymce: function(){
-			
-			// bail early if no tinymce
-			if( typeof tinymce === 'undefined' ) return;
-			
-			
-			// bail early if no tinyMCEPreInit.mceInit
-			if( typeof tinyMCEPreInit.mceInit === 'undefined' ) return;
-			
-			
-			// vars
-			var mceInit = this.get_mceInit();
-			
-			
-			// append
-			tinyMCEPreInit.mceInit[ mceInit.id ] = mceInit;
-			
-			
-			// bail early if not visual active
-			if( !this.$el.hasClass('tmce-active') ) return;
-			
-			
-			// initialize
-			try {
-				
-				// init
-				tinymce.init( mceInit );
-				
-				
-				// vars
-				var ed = tinyMCE.get( mceInit.id );
-				
-				
-				// action for 3rd party customization
-				acf.do_action('wysiwyg_tinymce_init', ed, ed.id, mceInit, this.$field);
-				
-			} catch(e){}
-			
-		},
-		
-		initialize_quicktags: function(){
-			
-			// bail early if no quicktags
-			if( typeof quicktags === 'undefined' ) return;
-			
-			
-			// bail early if no tinyMCEPreInit.qtInit
-			if( typeof tinyMCEPreInit.qtInit === 'undefined' ) return;
-			
-			
-			// vars
-			var qtInit = this.get_qtInit();
-			
-			
-			// append
-			tinyMCEPreInit.qtInit[ qtInit.id ] = qtInit;
-			
-			
-			// initialize
-			try {
-				
-				// init
-				var qtag = quicktags( qtInit );
-				
-				
-				// buttons
-				this._buttonsInit( qtag );
-				
-				
-				// action for 3rd party customization
-				acf.do_action('wysiwyg_quicktags_init', qtag, qtag.id, qtInit, this.$field);
-				
-			} catch(e){}
-			
-		},
-		
-		get_mceInit : function(){
-			
-			// reference
-			var $field = this.$field;
-				
-				
-			// vars
-			var toolbar = this.get_toolbar( this.o.toolbar ),
-				mceInit = $.extend({}, tinyMCEPreInit.mceInit.acf_content);
-			
-			
-			// selector
-			mceInit.selector = '#' + this.o.id;
-			
-			
-			// id
-			mceInit.id = this.o.id; // tinymce v4
-			mceInit.elements = this.o.id; // tinymce v3
-			
-			
-			// toolbar
-			if( toolbar ) {
-				
-				var k = (tinymce.majorVersion < 4) ? 'theme_advanced_buttons' : 'toolbar';
-				
-				for( var i = 1; i < 5; i++ ) {
-					
-					mceInit[ k + i ] = acf.isset(toolbar, i) ? toolbar[i] : '';
-					
-				}
-				
-			}
-			
-			
-			// events
-			if( tinymce.majorVersion < 4 ) {
-				
-				mceInit.setup = function( ed ){
-					
-					ed.onInit.add(function(ed, event) {
-						
-						// focus
-						$(ed.getBody()).on('focus', function(){
-					
-							acf.validation.remove_error( $field );
-							
-						});
-						
-						$(ed.getBody()).on('blur', function(){
-							
-							// update the hidden textarea
-							// - This fixes a bug when adding a taxonomy term as the form is not posted and the hidden textarea is never populated!
-			
-							// save to textarea	
-							ed.save();
-							
-							
-							// trigger change on textarea
-							$field.find('textarea').trigger('change');
-							
-						});
-					
-					});
-					
-				};
-			
-			} else {
-			
-				mceInit.setup = function( ed ){
-					
-					ed.on('focus', function(e) {
-				
-						acf.validation.remove_error( $field );
-						
-					});
-					
-					ed.on('change', function(e) {
-						
-						// save to textarea	
-						ed.save();
-						
-						
-						$field.find('textarea').trigger('change');
-						
-					});
-					
-/*
-					ed.on('blur', function(e) {
-						
-						// update the hidden textarea
-						// - This fixes a but when adding a taxonomy term as the form is not posted and the hidden textarea is never populated!
-		
-						// save to textarea	
-						ed.save();
-						
-						
-						// trigger change on textarea
-						$field.find('textarea').trigger('change');
-						
-					});
-*/
-					
-					/*
-ed.on('ResizeEditor', function(e) {
-					    // console.log(e);
-					});
-*/
-					
-				};
-			
-			}
-			
-			
-			// disable wp_autoresize_on (no solution yet for fixed toolbar)
-			mceInit.wp_autoresize_on = false;
-			
-			
-			// hook for 3rd party customization
-			mceInit = acf.apply_filters('wysiwyg_tinymce_settings', mceInit, mceInit.id, this.$field);
-			
-			
-			// return
-			return mceInit;
-			
-		},
-		
-		get_qtInit : function(){
-				
-			// vars
-			var qtInit = $.extend({}, tinyMCEPreInit.qtInit.acf_content);
-			
-			
-			// id
-			qtInit.id = this.o.id;
-			
-			
-			// hook for 3rd party customization
-			qtInit = acf.apply_filters('wysiwyg_quicktags_settings', qtInit, qtInit.id, this.$field);
-			
-			
-			// return
-			return qtInit;
-			
-		},
-		
-		/*
-		*  disable
-		*
-		*  This function will disable the tinymce for a given field
-		*  Note: txtarea_el is different from $textarea.val() and is the value that you see, not the value that you save.
-		*        this allows text like <--more--> to wok instead of showing as an image when the tinymce is removed
-		*
-		*  @type	function
-		*  @date	1/08/2014
-		*  @since	5.0.0
-		*
-		*  @param	n/a
-		*  @return	n/a
-		*/
 		
 		disable: function(){
 			
-			try {
-				
-				// vars
-				var ed = tinyMCE.get( this.o.id )
-					
-				
-				// save
-				ed.save();
-				
-				
-				// destroy editor
-				ed.destroy();
-								
-			} catch(e) {}
+			acf.tinymce.destroy( this.o.id );
 			
 		},
 		
 		enable: function(){
 			
-			try {
-				
-				// bail early if html mode
-				if( this.$el.hasClass('tmce-active') ) {
-					
-					switchEditors.go( this.o.id, 'tmce');
-					
-				}
-								
-			} catch(e) {}
-			
-		},
-		
-		get_toolbar : function( name ){
-			
-			// bail early if toolbar doesn't exist
-			if( typeof this.toolbars[ name ] !== 'undefined' ) {
-				
-				return this.toolbars[ name ];
-				
+			if( this.o.active ) {
+				acf.tinymce.enable( this.o.id );
 			}
-			
-			
-			// return
-			return false;
-			
-		},
-		
-		
-		/*
-		*  _buttonsInit
-		*
-		*  This function will add the quicktags HTML to a WYSIWYG field. Normaly, this is added via quicktags on document ready,
-		*  however, there is no support for 'append'. Source: wp-includes/js/quicktags.js:245
-		*
-		*  @type	function
-		*  @date	1/08/2014
-		*  @since	5.0.0
-		*
-		*  @param	ed (object) quicktag object
-		*  @return	n/a
-		*/
-		
-		_buttonsInit: function( ed ) {
-			var defaults = ',strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,';
-	
-			canvas = ed.canvas;
-			name = ed.name;
-			settings = ed.settings;
-			html = '';
-			theButtons = {};
-			use = '';
-
-			// set buttons
-			if ( settings.buttons ) {
-				use = ','+settings.buttons+',';
-			}
-
-			for ( i in edButtons ) {
-				if ( !edButtons[i] ) {
-					continue;
-				}
-
-				id = edButtons[i].id;
-				if ( use && defaults.indexOf( ',' + id + ',' ) !== -1 && use.indexOf( ',' + id + ',' ) === -1 ) {
-					continue;
-				}
-
-				if ( !edButtons[i].instance || edButtons[i].instance === inst ) {
-					theButtons[id] = edButtons[i];
-
-					if ( edButtons[i].html ) {
-						html += edButtons[i].html(name + '_');
-					}
-				}
-			}
-
-			if ( use && use.indexOf(',fullscreen,') !== -1 ) {
-				theButtons.fullscreen = new qt.FullscreenButton();
-				html += theButtons.fullscreen.html(name + '_');
-			}
-
-
-			if ( 'rtl' === document.getElementsByTagName('html')[0].dir ) {
-				theButtons.textdirection = new qt.TextDirectionButton();
-				html += theButtons.textdirection.html(name + '_');
-			}
-
-			ed.toolbar.innerHTML = html;
-			ed.theButtons = theButtons;
 			
 		}
 		
@@ -13596,38 +13642,52 @@ ed.on('ResizeEditor', function(e) {
 	
 	
 	/*
-	*  wysiwyg_manager
+	*  acf.tinymce
 	*
-	*  This model will handle validation of fields within a tab group
+	*  description
 	*
 	*  @type	function
-	*  @date	25/11/2015
-	*  @since	5.3.2
+	*  @date	18/8/17
+	*  @since	5.6.0
 	*
 	*  @param	$post_id (int)
 	*  @return	$post_id (int)
 	*/
 	
-	var acf_content = acf.model.extend({
+	acf.tinymce = acf.model.extend({
 		
-		$div: null,
+		toolbars: {},
 		
 		actions: {
 			'ready': 'ready'
 		},
 		
+		
+		/*
+		*  ready
+		*
+		*  This function will move the acf-hidden-wp-editor and fix the activeEditor
+		*
+		*  @type	function
+		*  @date	18/8/17
+		*  @since	5.6.0
+		*
+		*  @param	$post_id (int)
+		*  @return	$post_id (int)
+		*/
+		
 		ready: function(){
 
 			// vars
-			this.$div = $('#acf-hidden-wp-editor');
+			var $div = $('#acf-hidden-wp-editor');
 			
 			
 			// bail early if doesn't exist
-			if( !this.$div.exists() ) return;
+			if( !$div.exists() ) return;
 			
 			
 			// move to footer
-			this.$div.appendTo('body');
+			$div.appendTo('body');
 			
 			
 			// bail early if no tinymce
@@ -13655,15 +13715,381 @@ ed.on('ResizeEditor', function(e) {
 				
 			});
 			
-		}
+		},
+		
+		
+		/*
+		*  defaults
+		*
+		*  This function will return default mce and qt settings
+		*
+		*  @type	function
+		*  @date	18/8/17
+		*  @since	5.6.0
+		*
+		*  @param	$post_id (int)
+		*  @return	$post_id (int)
+		*/
+		
+		defaults: function(){
+			
+			// bail early if no tinyMCEPreInit
+			if( typeof tinyMCEPreInit === 'undefined' ) return false;
+			
+			
+			// vars
+			var defaults = {
+				tinymce:	tinyMCEPreInit.mceInit.acf_content,
+				quicktags:	tinyMCEPreInit.qtInit.acf_content
+			};
+			
+			
+			// return
+			return defaults;
+			
+		},
+		
+		
+		/*
+		*  initialize
+		*
+		*  This function will initialize the tinymce and quicktags instances
+		*
+		*  @type	function
+		*  @date	18/8/17
+		*  @since	5.6.0
+		*
+		*  @param	$post_id (int)
+		*  @return	$post_id (int)
+		*/
+		
+		initialize: function( id, args, $field ){
+			
+			// defaults
+			args = args || {};
+			$field = $field || null;
+			
+			
+			// merge
+			args = acf.parse_args(args, {
+				tinymce:	true,
+				quicktags:	true,
+				toolbar:	'full',
+				mode:		'visual', // visual,text
+			});
+			
+			
+			// tinymce
+			if( args.tinymce ) {
+				this.initialize_tinymce( id, args, $field );
+			}
+			
+			
+			// quicktags
+			if( args.quicktags ) {
+				this.initialize_quicktags( id, args, $field );
+			}
+			
+		},
+		
+		
+		/*
+		*  initialize_tinymce
+		*
+		*  This function will initialize the tinymce instance
+		*
+		*  @type	function
+		*  @date	18/8/17
+		*  @since	5.6.0
+		*
+		*  @param	$post_id (int)
+		*  @return	$post_id (int)
+		*/
+		
+		initialize_tinymce: function( id, args, $field ){
+			
+			// vars
+			var $textarea = $('#'+id);
+			var defaults = this.defaults();
+			var toolbars = this.toolbars;
+			
+			
+			// bail early
+			if( typeof tinymce === 'undefined' ) return false;
+			if( !defaults ) return false;
+			
+			
+			// check if exists
+			if( tinymce.get(id) ) {
+				return this.enable( id );
+			}
+			
+			
+			// settings
+			init = $.extend( {}, defaults.tinymce, args.tinymce );
+			init.id = id;
+			init.selector = '#' + id;
+			
+			
+			// toolbar
+			var toolbar = args.toolbar;
+			if( toolbar && typeof toolbars[toolbar] !== 'undefined' ) {
+				
+				for( var i = 1; i <= 4; i++ ) {
+					init[ 'toolbar' + i ] = toolbars[toolbar][i] || '';
+				}
+				
+			}
+			
+			
+			// event
+			init.setup = function( ed ){
+				
+				ed.on('focus', function(e) {
+					acf.validation.remove_error( $field );
+				});
+				
+				ed.on('change', function(e) {
+					ed.save(); // save to textarea	
+					$textarea.trigger('change');
+				});
+				
+				$( ed.getWin() ).on('unload', function() {
+					acf.tinymce.remove( id );
+				});
+				
+			};
+			
+			
+			// disable wp_autoresize_on (no solution yet for fixed toolbar)
+			init.wp_autoresize_on = false;
+			
+			
+			// hook for 3rd party customization
+			init = acf.apply_filters('wysiwyg_tinymce_settings', init, id, $field);
+			
+			
+			// z-index fix (caused too many conflicts)
+			//if( acf.isset(tinymce,'ui','FloatPanel') ) {
+			//	tinymce.ui.FloatPanel.zIndex = 900000;
+			//}
+			
+			
+			// store settings
+			tinyMCEPreInit.mceInit[ id ] = init;
+			
+			
+			// visual tab is active
+			if( args.mode == 'visual' ) {
+				
+				// init 
+				tinymce.init( init );
+				
+				
+				// get editor
+				var ed = tinymce.get( id );
+				
+				
+				// action
+				acf.do_action('wysiwyg_tinymce_init', ed, ed.id, init, $field);
+				
+			}
+			
+		},
+		
+		
+		/*
+		*  initialize_quicktags
+		*
+		*  This function will initialize the quicktags instance
+		*
+		*  @type	function
+		*  @date	18/8/17
+		*  @since	5.6.0
+		*
+		*  @param	$post_id (int)
+		*  @return	$post_id (int)
+		*/
+		
+		initialize_quicktags: function( id, args, $field ){
+			
+			// vars
+			var defaults = this.defaults();
+			
+			
+			// bail early
+			if( typeof quicktags === 'undefined' ) return false;
+			if( !defaults ) return false;
+			
+			
+			// settings
+			init = $.extend( {}, defaults.quicktags, args.quicktags );
+			init.id = id;
+			
+					
+			// filter
+			init = acf.apply_filters('wysiwyg_quicktags_settings', init, init.id, $field);
+			
+			
+			// store settings
+			tinyMCEPreInit.qtInit[ id ] = init;
+			
+			
+			// init
+			var ed = quicktags( init );
+			
+			
+			// generate HTML
+			this.build_quicktags( ed );
+			
+			
+			// action for 3rd party customization
+			acf.do_action('wysiwyg_quicktags_init', ed, ed.id, init, $field);
+				
+		},
+		
+		
+		/*
+		*  build_quicktags
+		*
+		*  This function will build the quicktags HTML
+		*
+		*  @type	function
+		*  @date	18/8/17
+		*  @since	5.6.0
+		*
+		*  @param	$post_id (int)
+		*  @return	$post_id (int)
+		*/
+		
+		build_quicktags: function( ed ){
+			
+			var canvas, name, settings, theButtons, html, ed, id, i, use,
+				defaults = ',strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,';
+
+			canvas = ed.canvas;
+			name = ed.name;
+			settings = ed.settings;
+			html = '';
+			theButtons = {};
+			use = '';
+
+			// set buttons
+			if ( settings.buttons ) {
+				use = ','+settings.buttons+',';
+			}
+
+			for ( i in edButtons ) {
+				if ( ! edButtons[i] ) {
+					continue;
+				}
+
+				id = edButtons[i].id;
+				if ( use && defaults.indexOf( ',' + id + ',' ) !== -1 && use.indexOf( ',' + id + ',' ) === -1 ) {
+					continue;
+				}
+
+				if ( ! edButtons[i].instance || edButtons[i].instance === instanceId ) {
+					theButtons[id] = edButtons[i];
+
+					if ( edButtons[i].html ) {
+						html += edButtons[i].html( name + '_' );
+					}
+				}
+			}
+
+			if ( use && use.indexOf(',dfw,') !== -1 ) {
+				theButtons.dfw = new QTags.DFWButton();
+				html += theButtons.dfw.html( name + '_' );
+			}
+
+			if ( 'rtl' === document.getElementsByTagName( 'html' )[0].dir ) {
+				theButtons.textdirection = new QTags.TextDirectionButton();
+				html += theButtons.textdirection.html( name + '_' );
+			}
+
+			ed.toolbar.innerHTML = html;
+			ed.theButtons = theButtons;
+
+			if ( typeof jQuery !== 'undefined' ) {
+				jQuery( document ).triggerHandler( 'quicktags-init', [ ed ] );
+			}
+			
+		},
+		
+		disable: function( id ){
+			
+			this.destroy( id );
+			
+		},
+		
+		destroy: function( id ){
+			
+			this.destroy_tinymce( id );
+			
+		},
+		
+		destroy_tinymce: function( id ){
+			
+			// bail early
+			if( typeof tinymce === 'undefined' ) return false;
+			
+			
+			// get editor
+			var ed = tinymce.get( id );
+				
+			
+			// bail early if no editor
+			if( !ed ) return false;
+			
+			
+			// save
+			ed.save();
+			
+			
+			// destroy editor
+			ed.destroy();
+			
+			
+			// return
+			return true;
+			
+		},
+		
+		enable: function( id ){
+			
+			this.enable_tinymce( id );
+			
+		},
+		
+		enable_tinymce: function( id ){
+			
+			// bail early
+			if( typeof switchEditors === 'undefined' ) return false;
+			
+			
+			// bail ealry if not initialized
+			if( typeof tinyMCEPreInit.mceInit[ id ] === 'undefined' ) return false;
+			
+						
+			// toggle			
+			switchEditors.go( id, 'tmce');
+			
+			
+			// return
+			return true;
+			
+		},
 		
 	});
+	
 
 })(jQuery);
 
 // @codekit-prepend "../js/event-manager.js";
 // @codekit-prepend "../js/acf.js";
 // @codekit-prepend "../js/acf-ajax.js";
+// @codekit-prepend "../js/acf-button-group.js";
 // @codekit-prepend "../js/acf-checkbox.js";
 // @codekit-prepend "../js/acf-color-picker.js";
 // @codekit-prepend "../js/acf-conditional-logic.js";
@@ -13676,6 +14102,7 @@ ed.on('ResizeEditor', function(e) {
 // @codekit-prepend "../js/acf-media.js";
 // @codekit-prepend "../js/acf-oembed.js";
 // @codekit-prepend "../js/acf-radio.js";
+// @codekit-prepend "../js/acf-range.js";
 // @codekit-prepend "../js/acf-relationship.js";
 // @codekit-prepend "../js/acf-select2.js";
 // @codekit-prepend "../js/acf-select.js";

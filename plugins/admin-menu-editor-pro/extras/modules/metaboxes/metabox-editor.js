@@ -70,9 +70,9 @@ var AmeMetaBoxEditor = (function () {
             window.location.href = this.forceRefreshUrl;
         }
     };
+    AmeMetaBoxEditor._ = wsAmeLodash;
     return AmeMetaBoxEditor;
 }());
-AmeMetaBoxEditor._ = wsAmeLodash;
 var AmeMetaBox = (function () {
     function AmeMetaBox(settings, metaBoxEditor) {
         var _this = this;
@@ -191,10 +191,10 @@ var AmeMetaBox = (function () {
         var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
         return input.replace(commentsAndPhpTags, '').replace(tags, '');
     };
+    AmeMetaBox._ = wsAmeLodash;
+    AmeMetaBox.counter = 0;
     return AmeMetaBox;
 }());
-AmeMetaBox._ = wsAmeLodash;
-AmeMetaBox.counter = 0;
 var AmeActorAccessDictionary = (function () {
     function AmeActorAccessDictionary(initialData) {
         this.items = {};
@@ -255,9 +255,9 @@ var AmeMetaBoxCollection = (function () {
     AmeMetaBoxCollection.prototype.deleteBox = function (item) {
         this.boxes.remove(item);
     };
+    AmeMetaBoxCollection._ = wsAmeLodash;
     return AmeMetaBoxCollection;
 }());
-AmeMetaBoxCollection._ = wsAmeLodash;
 jQuery(function () {
     var metaBoxEditor = new AmeMetaBoxEditor(wsAmeMetaBoxEditorData.settings, wsAmeMetaBoxEditorData.refreshUrl);
     ko.applyBindings(metaBoxEditor, document.getElementById('ame-meta-box-editor'));
