@@ -47,7 +47,7 @@ class WS_Init_Actions extends WS_Action_Set {
         	add_image_size( 'person', 500, 500, true );
         	add_image_size( 'hero_small', 560, 179, true );
         	add_image_size( 'hero', 1680, 550, true );
-        	add_image_size( 'news-hero', 1280, 960, false );        	
+        	add_image_size( 'newshero', 1280, 960, false );        	
         }
 
         if ( function_exists( 'add_theme_support' ) ) {
