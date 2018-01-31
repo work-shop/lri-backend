@@ -261,7 +261,7 @@ class WS_Init_Actions extends WS_Action_Set {
 
     	public function admin_css() {
     		if( current_user_can( 'update_core' ) ){
-    			wp_enqueue_style( 'admin_hide_toolbar', get_template_directory_uri() . '/assets/css/admin-hide-toolbar.css' );
+    			//wp_enqueue_style( 'admin_hide_toolbar', get_template_directory_uri() . '/assets/css/admin-hide-toolbar.css' );
 
 			//GET RID OF THIS LATER!!!!!
     			wp_enqueue_style( 'admin_hide_update_nag', get_template_directory_uri() . '/assets/css/admin-hide-update-nag.css' );
