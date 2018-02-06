@@ -13,7 +13,7 @@ function grant_gforms_editor_access() {
   $role->add_cap( 'gform_full_access' );
 }
 
-add_action('admin_init','add_grav_forms');
+add_action('admin_init','grant_gforms_editor_access');
 
 
 ?>
