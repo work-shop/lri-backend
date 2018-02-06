@@ -12,8 +12,8 @@ function grant_gforms_editor_access() {
   $role = get_role( 'editor' );
   $role->add_cap( 'gform_full_access' );
 }
-// Tie into the 'after_switch_theme' hook
-add_action( 'after_switch_theme', 'grant_gforms_editor_access' );
+
+add_action('admin_init','add_grav_forms');
 
 
 ?>
