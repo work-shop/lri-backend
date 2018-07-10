@@ -85,13 +85,13 @@ class CDN_Enabler_Rewriter
      * rewrite url
      *
      * @since   0.0.1
-     * @change  1.0.5
+     * @change  1.0.7
      *
      * @param   string  $asset  current asset
      * @return  string  updated url if not excluded
      */
 
-    protected function rewrite_url($asset) {
+    protected function rewrite_url(&$asset) {
         if ($this->exclude_asset($asset[0])) {
             return $asset[0];
         }
@@ -155,7 +155,7 @@ class CDN_Enabler_Rewriter
      * rewrite url
      *
      * @since   0.0.1
-     * @change  1.0.5
+     * @change  1.0.7
      *
      * @param   string  $html  current raw HTML doc
      * @return  string  updated HTML doc with CDN links
@@ -187,7 +187,7 @@ class CDN_Enabler_Rewriter
         $regex_rule .= '/(?:((?:'.$dirs.')[^\"\')]+)|([^/\"\']+\.[^/\"\')]+))(?=[\"\')])#';
 
         // call the cdn rewriter callback
-        $cdn_html = preg_replace_callback($regex_rule, [&$this, 'rewrite_url'], $html);
+        $cdn_html = preg_replace_callback($regex_rule, [$this, 'rewrite_url'], $html);
 
         return $cdn_html;
     }
