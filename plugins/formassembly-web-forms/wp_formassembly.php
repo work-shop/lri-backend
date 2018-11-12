@@ -2,10 +2,10 @@
 /*
 Plugin Name: WP-FormAssembly
 Plugin URI: http://www.formassembly.com/plugins/wordpress/
-Description: Embed a FormAssembly Web Form in a WordPress Post. To use, add a [formassembly formid='NNNN'] tag to your post. To create your web form, go to http://www.formassembly.com
-Version: 2.0.2
+Description: Embed a FormAssembly Web Form in a WordPress Post or Page. To use, add a [formassembly formid=NNNN] tag to your post. To create your web form, go to https://www.formassembly.com
+Version: 2.0.4
 Author: FormAssembly / Drew Buschhorn
-Author URI: http://www.formassembly.com
+Author URI: https://www.formassembly.com
 */
 
 /*
@@ -18,14 +18,14 @@ Basic Usage:
 
 [formassembly formid=NNNN]
 or
-[formassembly workflowid=NNNN}]
+[formassembly workflowid=NNNN]
 
-(where NNNN is the ID of a form or workflow created with FormAssembly.com)
+(where NNNN is the ID of a form or workflow created with FormAssembly)
 
 Advanced Attributes:
   iframe="true"                 Render as iframe
   style="XXX: YYYY;"            Add CSS overrides to either Form or Iframe
-  server="a URL"                Override the default server (http://app.formassembly.com) to retrieve the form from a different FormAssembly instance. E.g "http://acme.tfaforms.net"
+  server="a URL"                Override the default server (https://app.formassembly.com) to retrieve the form from a different FormAssembly instance, e.g., "https://acme.tfaforms.net"
 
 */
 
@@ -109,7 +109,7 @@ function fa_add($atts) {
                                 }
                                 // REST API call not supported, must use iframe instead.
                                 else {
-                                        $buffer = "<strong style=\"color:red\">Your server does not support this form publishing method. Try adding iframe=\"1\" to your formassembly tag.</strong>";
+                                        $buffer = "<strong style=\"color:red\">Your server does not support this form publishing method. Try adding iframe=\"1\" to your FormAssembly tag.</strong>";
                                 }
 
                                 // Add style options in to combat wordpresses' default centering of forms.

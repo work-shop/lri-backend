@@ -31,7 +31,7 @@ The CDN Enabler plugin has been developed to link your content to the CDN URLs.
 
 
 = System Requirements =
-* PHP >=5.4
+* PHP >=5.6
 * WordPress >=4.6
 
 
@@ -46,6 +46,11 @@ The CDN Enabler plugin has been developed to link your content to the CDN URLs.
 
 
 == Changelog ==
+
+= 1.0.8 =
+* Purge CDN redirects to admin dashboard to avoid error messages
+* Better error messages
+* Do not display nag notice when KeyCDN API credentials are set
 
 = 1.0.7 =
 * Minor bug fixes (pass-by-reference)
