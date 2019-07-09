@@ -12,23 +12,24 @@
  * [3.2] classes/class-init-actions.php, a class that sets up init-specific filters on theme-load.
  *
  */
-	
-	/* [1] */
-	require_once('library/globals.php');
 
-	/* [2] */
-	require_once('library/abstracts/abstract_action_set.php');
-	require_once('library/abstracts/abstract_filter_set.php');
+/* [1] */
+require_once('library/globals.php');
 
-	/* [3] */
-	require_once( 'library/classes/class_init_actions.php' );
-	require_once( 'library/classes/class_init_filters.php');
+/* [2] */
+require_once('library/abstracts/abstract_action_set.php');
+require_once('library/abstracts/abstract_filter_set.php');
 
-	require_once( 'library/custom_dashboard_setup.php');
+/* [3] */
+require_once( 'library/classes/class_init_actions.php' );
+require_once( 'library/classes/class_init_filters.php');
 
-	require_once( 'library/custom_endpoints.php');
+require_once( 'library/custom_dashboard_setup.php');
 
-	require_once('library/gravity_forms_permissions_overrides.php');
-	
+require_once( 'library/custom_endpoints.php');
+
+require_once('library/gravity_forms_permissions_overrides.php');
+
+
 
 ?>
